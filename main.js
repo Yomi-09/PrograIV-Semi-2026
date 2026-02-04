@@ -21,30 +21,20 @@ createApp({
         }
     },
     methods:{
-        obtenerAlumnos() {
-    let n = localStorage.length;
-    this.alumnos = [];
-    let busqueda = this.buscar.toUpperCase(); 
-
-    for (let i = 0; i < n; i++) {
-        let key = localStorage.key(i);
-        if (!isNaN(key)) {
-            let data = JSON.parse(localStorage.getItem(key));
-            
-            
-            if (
-                data.nombre.toUpperCase().includes(busqueda) ||
-                data.codigo.toUpperCase().includes(busqueda) ||
-                data.telefono.toUpperCase().includes(busqueda) ||
-                data.municipio.toUpperCase().includes(busqueda) ||
-                data.email.toUpperCase().includes(busqueda) ||
-                data.departamento.toUpperCase().includes(busqueda)
-            ) {
-                this.alumnos.push(data);
+        obtenerAlumnos(){
+            let n = localStorage.length;
+            this.alumnos = [];
+            for(let i=0; i<n; i++){
+                let key = localStorage.key(i);
+                if( !isNaN(key) ){
+                    let data = JSON.parse(localStorage.getItem(key));
+                    if( data.nombre.toUpperCase().includes(this.buscar.toUpperCase()) || 
+                        data.codigo.toUpperCase().includes(this.buscar.toUpperCase()) ){
+                        this.alumnos.push(data);
+                    }
+                }
             }
-        }
-    }
-},
+        },
         eliminarAlumno(id){
             if(confirm("¿Está seguro de eliminar el alumno?")){
                 localStorage.removeItem(id);

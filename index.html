@@ -11,12 +11,12 @@
         <div class="row">
             <div class="col-6">
                 <form id="frmAlumnos" @submit.prevent="guardarAlumno" @reset.prevent="limpiarFormulario">
-                    <div class="card text-bg-dark mb-3">
+                    <div class="card text-bg-secondary mb-3" style="max-width: 50rem;">
                         <div class="card-header">REGISTRO DE ALUMNOS</div>
                         <div class="card-body">
                             <div class="row p-1">
-                                <div class="col-3">CODIGO:</div>
-                                <div class="col-4">
+                                <div class="col-3">CÓDIGO:</div>
+                                <div class="col-8">
                                     <input placeholder="codigo" required v-model="alumno.codigo" type="text" class="form-control">
                                 </div>
                             </div>
@@ -27,8 +27,8 @@
                                 </div>
                             </div>
                             <div class="row p-1">
-                                <div class="col-3">DIRECCION:</div>
-                                <div class="col-9">
+                                <div class="col-3">DIRECCIÓN:</div>
+                                <div class="col-8">
                                     <input placeholder="direccion" required v-model="alumno.direccion" type="text" class="form-control">
                                 </div>
                             </div>
@@ -39,26 +39,26 @@
                                 </div>
                             </div>
                             <div class="row p-1">
-                                <div class="col-3">DEPTO:</div>
+                                <div class="col-3">DEPARTAMENTO:</div>
                                 <div class="col-8">
                                     <input placeholder="departamento" required v-model="alumno.departamento" type="text" class="form-control">
                                 </div>
                             </div>
                             <div class="row p-1">
-                                <div class="col-3">TELEFONO:</div>
-                                <div class="col-5">
+                                <div class="col-3">TELÉFONO:</div>
+                                <div class="col-8">
                                     <input placeholder="telefono" required v-model="alumno.telefono" type="text" class="form-control">
                                 </div>
                             </div>
                            <div class="row p-1">
-                         <div class="col-3">FECHA NAC:</div>
-                            <div class="col-6">
-                       <input placeholder="DD/MM/AAAA" required v-model="alumno.fechaNacimiento" type="text" class="form-control">
+                         <div class="col-3">NACIMIENTO:</div>
+                            <div class="col-8">
+                       <input placeholder="DD/MM/AAAA" required v-model="alumno.fechaNacimiento" type="date" class="form-control">
                       </div>
                         </div>
                             <div class="row p-1">
                                 <div class="col-3">SEXO:</div>
-                                <div class="col-6">
+                                <div class="col-8">
                                     <select v-model="alumno.sexo" class="form-select" required>
                                         <option value="">Seleccione...</option>
                                         <option value="Masculino">Masculino</option>
@@ -76,8 +76,8 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col text-center">
-                                    <button type="submit" class="btn btn-primary">GUARDAR</button>
-                                    <button type="reset" class="btn btn-warning">NUEVO</button>
+                                    <button type="submit" class="btn btn-primary me-2">GUARDAR</button>
+                                    <button type="reset" class="btn btn-dark">NUEVO</button>
                                 </div>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                 </form>
             </div>
             <div class="col-6">
-               <table class="table table-striped table-hover" id="tblAlumnos">
+               <table class="table table-danger table-hover" id="tblAlumnos">
                  <thead>
                     <tr>
                       <th colspan="10">
@@ -93,12 +93,12 @@
             </th>
         </tr>
                 <tr>
-                    <th>CODIGO</th>
+                    <th>CÓDIGO</th>
                     <th>NOMBRE</th>
-                    <th>DIRECCION</th>
+                    <th>DIRECCIÓN</th>
                     <th>MUNICIPIO</th>
-                    <th>DEPTO</th>
-                    <th>TEL</th>
+                    <th>DEPARTAMENTO</th>
+                    <th>TELÉFONO</th>
                     <th>NACIMIENTO</th>
                     <th>SEXO</th>
                     <th>EMAIL</th>
