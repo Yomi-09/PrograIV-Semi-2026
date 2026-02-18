@@ -6,22 +6,19 @@ const { createApp } = Vue,
 createApp({
     components:{
         alumnos,
-        busqueda_alumnos
+        busqueda_alumnos,
+        materias,
+        busqueda_materias,
+        docentes,
+        busqueda_docentes,
+        matriculas,
+        busqueda_matriculas,
+        inscripciones,
+        busqueda_inscripciones
+        
     },
     data(){
         return{
-            alumno:{
-                idAlumno:0,
-                codigo:"",
-                nombre:"",
-                direccion:"",
-                email:"",
-                telefono:""
-            },
-            accion:'nuevo',
-            idAlumno:0,
-            buscar:'',
-            alumnos:[]
             forms:{
                 alumnos:{mostrar:false},
                 busqueda_alumnos:{mostrar:false},
@@ -30,74 +27,30 @@ createApp({
                 docentes:{mostrar:false},
                 busqueda_docentes:{mostrar:false},
                 matriculas:{mostrar:false},
-                inscripciones:{mostrar:false}
+                busqueda_matriculas:{mostrar:false},
+                inscripciones:{mostrar:false},
+                busqueda_inscripciones:{mostrar:false}
             }
         }
     },
     methods:{
-        async obtenerAlumnos(){
-            this.alumnos = await db.alumnos.filter(
-                alumno => alumno.codigo.toLowerCase().includes(this.buscar.toLowerCase()) 
-                    || alumno.nombre.toLowerCase().includes(this.buscar.toLowerCase())
-            ).toArray();
-        },
-        async eliminarAlumno(idAlumno, e){
-            e.stopPropagation();
-            if(confirm("¿Está seguro de eliminar el alumno?")){
-                await db.alumnos.delete(idAlumno);
-                this.obtenerAlumnos();
-            }
-        },
-        modificarAlumno(alumno){
-            this.accion = 'modificar';
-            this.idAlumno = alumno.idAlumno;
-            this.alumno.codigo = alumno.codigo;
-            this.alumno.nombre = alumno.nombre;
-            this.alumno.direccion = alumno.direccion;
-            this.alumno.email = alumno.email;
-            this.alumno.telefono = alumno.telefono;
-        },
-        async guardarAlumno() {
-            let datos = {
-                idAlumno: this.accion=='modificar' ? this.idAlumno : this.getId(),
-                codigo: this.alumno.codigo,
-                nombre: this.alumno.nombre,
-                direccion: this.alumno.direccion,
-                email: this.alumno.email,
-                telefono: this.alumno.telefono
-            };
-            this.buscar = datos.codigo;
-            await this.obtenerAlumnos();
-
-            if(this.alumnos.length > 0 && this.accion=='nuevo'){
-                alert("El codigo del alumno ya existe, "+ this.alumnos[0].nombre);
-                return; //Termina la ejecucion de la funcion
-            }
-            db.alumnos.put(datos);
-            this.limpiarFormulario();
-            this.obtenerAlumnos();
-        },
-        getId(){
-            return new Date().getTime();
-        },
-        limpiarFormulario(){
-            this.accion = 'nuevo';
-            this.idAlumno = 0;
-            this.alumno.codigo = '';
-            this.alumno.nombre = '';
-            this.alumno.direccion = '';
-            this.alumno.email = '';
-            this.alumno.telefono = '';
+        buscar(ventana, metodo){
+            this.$refs[ventana][metodo]();
         },
         abrirVentana(ventana){
             this.forms[ventana].mostrar = !this.forms[ventana].mostrar;
-            console.log(this.forms[ventana].mostrar, ventana);
+        },
+        modificar(ventana, metodo, data){
+            this.$refs[ventana][metodo](data);
         }
     },
     mounted(){
         db.version(1).stores({
-            "alumnos": "idAlumno, codigo, nombre, direccion, email, telefono"
+            "alumnos": "idAlumno, codigo, nombre, direccion, email, telefono",
+            "materias": "idMateria, codigo, nombre, uv",
+            "docentes": "idDocente, codigo, nombre, direccion, email, telefono, escalafon",
+            "matriculas": "idMatricula, idAlumno, idMateria, idDocente, fecha_matricula, nombre_materia",
+            "inscripciones": "idInscripcion, idAlumno, nombre_alumno, dui, fecha_inscripcion, ciclo_periodo, carrera, estado"
         });
-        this.obtenerAlumnos();
     }
 }).mount("#app");
