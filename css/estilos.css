@@ -1,7 +1,38 @@
 body {
-    background-color: #f4f6f9;
+    background: linear-gradient(to right, #fdf0f5, #f8e8ee);
 }
 
-.card {
+.titulo-biblioteca {
+    font-weight: bold;
+    color: #6d4c41;
+}
+
+.subtitulo {
+    color: #ad1457;
+}
+
+.card-biblioteca {
     border-radius: 15px;
+    border: none;
+    background-color: #fff8f0;
+}
+
+.btn-rosa {
+    background-color: #ec407a;
+    color: white;
+}
+
+.btn-rosa:hover {
+    background-color: #d81b60;
+    color: white;
+}
+
+.btn-madera {
+    background-color: #8d6e63;
+    color: white;
+}
+
+.btn-madera:hover {
+    background-color: #6d4c41;
+    color: white;
 }

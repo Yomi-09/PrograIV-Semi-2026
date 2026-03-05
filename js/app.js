@@ -1,5 +1,6 @@
 new Vue({
     el: "#app",
+
     data: {
         autor: {},
         autores: [],
@@ -13,21 +14,20 @@ new Vue({
     computed: {
         autoresFiltrados() {
             return this.autores.filter(a =>
-                a.nombre.toLowerCase().includes(this.buscarAutor.toLowerCase()) ||
-                a.codigo.toLowerCase().includes(this.buscarAutor.toLowerCase())
+                (a.nombre && a.nombre.toLowerCase().includes(this.buscarAutor.toLowerCase())) ||
+                (a.codigo && a.codigo.toLowerCase().includes(this.buscarAutor.toLowerCase()))
             );
         },
         librosFiltrados() {
             return this.libros.filter(l =>
-                l.titulo.toLowerCase().includes(this.buscarLibro.toLowerCase()) ||
-                l.isbn.toLowerCase().includes(this.buscarLibro.toLowerCase())
+                (l.titulo && l.titulo.toLowerCase().includes(this.buscarLibro.toLowerCase())) ||
+                (l.isbn && l.isbn.toLowerCase().includes(this.buscarLibro.toLowerCase()))
             );
         }
     },
 
     methods: {
 
-        // ===== AUTORES =====
         async guardarAutor() {
             if (this.autor.idAutor) {
                 await db.autores.update(this.autor.idAutor, this.autor);
@@ -51,7 +51,6 @@ new Vue({
             this.cargarAutores();
         },
 
-        // ===== LIBROS =====
         async guardarLibro() {
             if (this.libro.idLibro) {
                 await db.libros.update(this.libro.idLibro, this.libro);
