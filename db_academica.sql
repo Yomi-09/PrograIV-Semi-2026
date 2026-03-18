@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 02, 2026 at 07:06 PM
--- Server version: 10.4.25-MariaDB
--- PHP Version: 8.1.10
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 18-03-2026 a las 02:45:35
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `db_academica`
+-- Base de datos: `db_academica`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `alumnos`
+-- Estructura de tabla para la tabla `alumnos`
 --
 
 CREATE TABLE `alumnos` (
@@ -34,26 +34,26 @@ CREATE TABLE `alumnos` (
   `nombre` char(100) NOT NULL,
   `direccion` char(150) NOT NULL,
   `email` char(150) NOT NULL,
-  `telefono` char(9) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+  `telefono` char(10) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `alumnos`
+-- Indices de la tabla `alumnos`
 --
 ALTER TABLE `alumnos`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `idAlumno` (`idAlumno`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `alumnos`
+-- AUTO_INCREMENT de la tabla `alumnos`
 --
 ALTER TABLE `alumnos`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
