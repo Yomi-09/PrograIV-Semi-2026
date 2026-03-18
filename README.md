@@ -1,2 +1,2 @@
-# PrograIV-Semi-2026
-Ejemplos y prácticas de las clases de Programación Computacional IV
+# PrograIV-semi-2026
+Ejemplos y y practicas de la clase de programacion computacional IV

@@ -5,6 +5,7 @@ const busqueda_alumnos = {
             alumnos:[]
         }
     },
+    
     methods:{
         modificarAlumno(alumno){
             this.$emit('modificar', alumno);
@@ -27,7 +28,7 @@ const busqueda_alumnos = {
             e.stopPropagation();
             alertify.confirm('Elimanar alumnos', `¿Está seguro de eliminar el alumno ${alumno.nombre}?`, async e=>{
                 await db.alumnos.delete(alumno.idAlumno);
-                fetch(`private/modulos/alumnos/alumno.php?accion=eliminar&alumnos=${encodeURIComponent(JSON.stringify(alumno))}`)
+                fetch(`private/modulos/alumnos/alumno.php?accion=eliminar&alumnos=${JSON.stringify(alumno)}`)
                     .then(response=>response.json())
                     .then(data=>{
                         if(data!=true) alertify.error(`Error al sincronizar con el servidor: ${data}`);

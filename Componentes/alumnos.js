@@ -38,7 +38,7 @@ const alumnos = {
                 email: this.alumno.email,
                 telefono: this.alumno.telefono
             };
-            datos.hash = sha256(JSON.stringify(datos));
+            //datos.hash = sha256(JSON.stringify(datos));
             this.buscar = datos.codigo;
             //await this.obtenerAlumnos();
 
@@ -47,7 +47,7 @@ const alumnos = {
                 return; //Termina la ejecucion de la funcion
             }
             db.alumnos.put(datos);
-            fetch(`private/modulos/alumnos/alumno.php?accion=${this.accion}&alumnos=${encodeURIComponent(JSON.stringify(datos))}`)
+            fetch(`private/modulos/alumnos/alumno.php?accion=${this.accion}&alumnos=${JSON.stringify(datos)}`)
                 .then(response=>response.json())
                 .then(data=>{
                     if(data!=true) alertify.error(`Error al sincronizar con el servidor: ${data}`);
@@ -57,7 +57,7 @@ const alumnos = {
             //this.obtenerAlumnos();
         },
         getId(){
-            return new Date().getTime();
+            return uuid.v4();
         },
         limpiarFormulario(){
             this.accion = 'nuevo';
@@ -73,7 +73,7 @@ const alumnos = {
         <div class="row">
             <div class="col-6">
                 <form id="frmAlumnos" @submit.prevent="guardarAlumno" @reset.prevent="limpiarFormulario">
-                    <div class="card text-bg-dark mb-3" style="max-width: 36rem;">
+                    <div class="card text-bg-secondary mb-3" style="max-width: 36rem;">
                         <div class="card-header">REGISTRO DE ALUMNOS</div>
                         <div class="card-body">
                             <div class="row p-1">
@@ -131,4 +131,5 @@ const alumnos = {
             </div>
         </div>
     `
+    
 };
