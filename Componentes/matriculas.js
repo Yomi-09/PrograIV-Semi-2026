@@ -83,7 +83,7 @@ const matriculas = {
 template: `
     <div class="row">
         <div class="col-6">
-            <div class="card text-bg-secondary mb-3" style="max-width: 38rem;">
+            <div class="card mb-3" style="max-width: 36rem; background-color:#ffd6e7;">
                 <div class="card-header">REGISTRO DE MATRICULAS</div>
                 <div class="card-body">
                     <div class="row p-1">

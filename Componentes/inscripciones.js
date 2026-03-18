@@ -109,7 +109,7 @@ const inscripciones = {
         <div class="row">
             <div class="col-8">
                 <form id="frmInscripciones" @submit.prevent="guardarInscripcion" @reset.prevent="limpiarFormulario">
-                    <div class="card text-bg-secondary mb-3">
+                    <div class="card mb-3" style="max-width: 36rem; background-color:#ffd6e7;">
                         <div class="card-header">INSCRIPCIÓN DE MATERIAS</div>
                         <div class="card-body">
 
