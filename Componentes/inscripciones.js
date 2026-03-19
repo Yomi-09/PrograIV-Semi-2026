@@ -1,175 +1,92 @@
 const inscripciones = {
-    props: ['forms'],
-
+    template: `
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Nueva Inscripción</h5>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="small fw-bold">Alumno:</label>
+                        <select v-model="registro.idAlumno" class="form-select form-select-sm">
+                            <option value="">-- Seleccione Alumno --</option>
+                            <option v-for="a in alumnos" :value="a.idAlumno">{{a.nombre}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="small fw-bold">Materia:</label>
+                        <select v-model="registro.idMateria" class="form-select form-select-sm">
+                            <option value="">-- Seleccione Materia --</option>
+                            <option v-for="m in materias" :value="m.idMateria">{{m.nombre}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="small fw-bold">Docente:</label>
+                        <select v-model="registro.idDocente" class="form-select form-select-sm">
+                            <option value="">-- Seleccione Docente --</option>
+                            <option v-for="d in docentes" :value="d.idDocente">{{d.nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button @click="guardar" class="btn btn-success w-100 shadow-sm">Finalizar Inscripción</button>
+                </div>
+            </div>
+        </div>`,
     data() {
         return {
-            inscripcion: {
-                idInscripcion: '',
-                codigo_alumno: '',
-                materia: '',
-                fecha_inscripcion: '',
-                ciclo_periodo: '',
-                observaciones: '',
-            },
+            registro: { idInscripcion: '', idAlumno: '', idMateria: '', idDocente: '' },
+            alumnos: [],
             materias: [],
-            accion: 'nuevo',
-            idInscripcion: '',
+            docentes: []
         }
     },
-
     mounted() {
-        this.cargarMaterias();
+        this.cargarDatos();
     },
-
     methods: {
-        async cargarMaterias() {
-            this.materias = await db.materias.toArray();
-        },
-
-        buscarInscripcion() {
-            this.forms.busqueda_inscripciones.mostrar =
-                !this.forms.busqueda_inscripciones.mostrar;
-            this.$emit('buscar');
-        },
-
-        modificarInscripcion(inscripcion) {
-            this.accion = 'modificar';
-            this.idInscripcion = inscripcion.idInscripcion;
-            Object.assign(this.inscripcion, inscripcion);
-        },
-
-        limpiarFormulario() {
-            this.accion = 'nuevo';
-            this.idInscripcion = '';
-            this.inscripcion = {
-                idInscripcion: '',
-                codigo_alumno: '',
-                materia: '',
-                fecha_inscripcion: '',
-                ciclo_periodo: '',
-                observaciones: '',
-            };
-        },
-
-
-        seleccionarMateria() {
-            let materia = this.materias.find(
-                m => String(m.nombre) === String(this.inscripcion.materia)
-            );
-            if (materia) {
-                this.inscripcion.materia = materia.nombre;
-            } else {
-                this.inscripcion.materia = '';
+        cargarDatos() {
+            try {
+                const resA = window.dbInstance.exec("SELECT idAlumno, nombre FROM alumnos");
+                this.alumnos = resA.length > 0 ? resA[0].values.map(f => ({idAlumno: f[0], nombre: f[1]})) : [];
+                
+                const resM = window.dbInstance.exec("SELECT idMateria, nombre FROM materias");
+                this.materias = resM.length > 0 ? resM[0].values.map(f => ({idMateria: f[0], nombre: f[1]})) : [];
+                
+                const resD = window.dbInstance.exec("SELECT idDocente, nombre FROM docentes");
+                this.docentes = resD.length > 0 ? resD[0].values.map(f => ({idDocente: f[0], nombre: f[1]})) : [];
+            } catch (e) {
+                console.error("Error al cargar selects:", e);
             }
         },
-
-        async guardarInscripcion() {
-            if (!this.inscripcion.codigo_alumno ||
-                !this.inscripcion.materia ||
-                !this.inscripcion.fecha_inscripcion ||
-                !this.inscripcion.ciclo_periodo) {
-                alertify.error('Complete todos los campos obligatorios');
+        guardar() {
+            // Validación de campos vacíos
+            if(!this.registro.idAlumno || !this.registro.idMateria || !this.registro.idDocente) {
+                alertify.error("Debe seleccionar todos los campos");
                 return;
             }
 
-            let alumno = await fetch(`private/modulos/inscripciones/inscripcion.php?accion=validar_alumno&codigo=${this.inscripcion.codigo_alumno}`)
-                .then(response => response.json());
+            try {
+                this.registro.idInscripcion = uuid.v4();
+                
+                // Usamos el nombre de tabla 'inscripcion' que está en tu main.js
+                const sql = "INSERT INTO inscripcion (idInscripcion, idAlumno, idMateria, idDocente) VALUES (?, ?, ?, ?)";
+                window.dbInstance.run(sql, [
+                    this.registro.idInscripcion, 
+                    this.registro.idAlumno, 
+                    this.registro.idMateria, 
+                    this.registro.idDocente
+                ]);
+                
+                window.guardarCambios();
+                alertify.success("Inscripción guardada correctamente");
+                
+                // Limpiar formulario y refrescar tabla
+                this.registro = { idInscripcion: '', idAlumno: '', idMateria: '', idDocente: '' };
+                this.$emit('buscar'); 
 
-            if (!alumno) {
-                alertify.error('El código del alumno no existe');
-                return;
+            } catch (e) {
+                console.error("Error al guardar:", e);
+                alertify.error("Error al guardar en la base de datos");
             }
-
-            let datos = {
-                idInscripcion: this.accion === 'modificar' ? this.idInscripcion : this.getId(),
-                codigo_alumno: this.inscripcion.codigo_alumno,
-                materia: this.inscripcion.materia,
-                fecha_inscripcion: this.inscripcion.fecha_inscripcion,
-                ciclo_periodo: this.inscripcion.ciclo_periodo,
-                observaciones: this.inscripcion.observaciones,
-            };
-
-            await db.inscripciones.put(datos);
-            fetch(`private/modulos/inscripciones/inscripcion.php?accion=${this.accion}&inscripciones=${JSON.stringify(datos)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data != true) alertify.error(`Error al sincronizar con el servidor: ${data}`);
-                });
-
-            this.limpiarFormulario();
-            alertify.success(`Inscripcion guardada correctamente`);
-        },
-
-        getId() {
-            return uuid.v4();
         }
-    },
-
-    template: `
-        <div class="row">
-            <div class="col-8">
-                <form id="frmInscripciones" @submit.prevent="guardarInscripcion" @reset.prevent="limpiarFormulario">
-                    <div class="card mb-3" style="max-width: 36rem; background-color:#ffd6e7;">
-                        <div class="card-header">INSCRIPCIÓN DE MATERIAS</div>
-                        <div class="card-body">
-
-                            <div class="row p-1">
-                                <div class="col-3">CÓDIGO ALUMNO:</div>
-                                <div class="col-4">
-                                    <input v-model="inscripcion.codigo_alumno" type="text" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="row p-1">
-                                <div class="col-3">MATERIA:</div>
-                                <div class="col-6">
-                                    <select v-model="inscripcion.materia" @change="seleccionarMateria" class="form-control" :disabled="materias.length === 0">
-                                        <option value="">-- Seleccione Materia --</option>
-                                        <option v-for="m in materias" :key="m.idMateria" :value="m.nombre">
-                                            {{ m.codigo }} - {{ m.nombre }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row p-1">
-                                <div class="col-3">FECHA INSCRIPCIÓN:</div>
-                                <div class="col-4">
-                                    <input v-model="inscripcion.fecha_inscripcion" type="date" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="row p-1">
-                                <div class="col-3">CICLO/PERIODO:</div>
-                                <div class="col-4">
-                                    <select v-model="inscripcion.ciclo_periodo" class="form-control">
-                                        <option value="" disabled>Seleccione ciclo</option>
-                                        <option value="Ciclo 1-2026">Ciclo 1-2026</option>
-                                        <option value="Ciclo 2-2026">Ciclo 2-2026</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row p-1">
-                                <div class="col-3">OBSERVACIONES:</div>
-                                <div class="col-8">
-                                    <textarea v-model="inscripcion.observaciones" class="form-control" rows="2"></textarea>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col text-center">
-                                    <button type="submit" id="btnGuardarInscripcion" class="btn btn-primary">GUARDAR</button>
-                                    <button type="reset" id="btnCancelarInscripcion" class="btn btn-warning">NUEVO</button>
-                                    <button type="button" @click="buscarInscripcion" id="btnBuscarInscripcion" class="btn btn-success">BUSCAR</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    `
+    }
 };

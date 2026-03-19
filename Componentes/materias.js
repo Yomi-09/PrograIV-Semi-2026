@@ -1,109 +1,48 @@
 const materias = {
-    props:['forms'],
-    data(){
-        return{
-            materia:{
-                idMateria:0,
-                codigo:"",
-                nombre:"",
-                uv:'',
-            },
-            accion:'nuevo',
-            idMateria:0,
-            data_materias:[]
+    template: `
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Registro de Materias</h5>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label small">Código:</label>
+                        <input v-model="materia.codigo" type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-7">
+                        <label class="form-label small">Nombre de la Materia:</label>
+                        <input v-model="materia.nombre" type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small">UV:</label>
+                        <input v-model="materia.uv" type="number" class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button @click="guardar" class="btn btn-primary btn-sm px-3">Guardar</button>
+                    <button @click="nuevo" class="btn btn-secondary btn-sm px-3 ms-2">Nuevo</button>
+                </div>
+            </div>
+        </div>`,
+    data() {
+        return {
+            materia: { idMateria: '', codigo: '', nombre: '', uv: '' }
         }
     },
-    methods:{
-        buscarMateria(){
-            this.forms.busqueda_materias.mostrar = !this.forms.busqueda_materias.mostrar;
+    methods: {
+        guardar() {
+            if (!this.materia.idMateria) this.materia.idMateria = uuid.v4();
+            window.dbInstance.run("INSERT OR REPLACE INTO materias (idMateria, codigo, nombre, uv) VALUES (?, ?, ?, ?)", 
+                [this.materia.idMateria, this.materia.codigo, this.materia.nombre, this.materia.uv]);
+            window.guardarCambios();
+            alertify.success("Materia guardada");
+            this.nuevo();
             this.$emit('buscar');
         },
-        modificarMateria(materia){
-            this.accion = 'modificar';
-            this.idMateria = materia.idMateria;
-            this.materia.codigo = materia.codigo;
-            this.materia.nombre = materia.nombre;
-            this.materia.uv = materia.uv;
+        modificarMateria(datos) {
+            this.materia = { ...datos };
         },
-        async guardarMateria() {
-            let datos = {
-                idMateria: this.accion=='modificar' ? this.idMateria : this.getId(),
-                codigo: this.materia.codigo,
-                nombre: this.materia.nombre,
-                uv: this.materia.uv,
-            };
-            this.buscar = datos.codigo;
-            //await this.obtenerMaterias();
-
-            if(this.data_materias.length > 0 && this.accion=='nuevo'){
-                alertify.error(`El codigo del materia ya existe, ${this.data_materias[0].nombre}`);
-                return; //Termina la ejecucion de la funcion
-            }
-            db.materias.put(datos);
-            fetch(`private/modulos/materias/materia.php?accion=${this.accion}&materias=${JSON.stringify(datos)}`)
-                .then(response=>response.json())
-                .then(data=>{
-                    if(data!=true) alertify.error(`Error al sincronizar con el servidor: ${data}`);
-                });
-            this.limpiarFormulario();
-            //this.obtenerMaterias();
-            alertify.success(`Materia ${datos.nombre} guardada correctamente`);
-        },
-        getId(){
-            return uuid.v4();
-        },
-        limpiarFormulario(){
-            this.accion = 'nuevo';
-            this.idMateria = 0;
-            this.materia.codigo = '';
-            this.materia.nombre = '';
-            this.materia.uv = '';
-        },
-    },
-    template: `
-        <div class="row">
-            <div class="col-6">
-                <form id="frmMaterias" @submit.prevent="guardarMateria" @reset.prevent="limpiarFormulario">
-                    <div class="card mb-3" style="max-width: 36rem; background-color:#ffd6e7;">
-                        <div class="card-header">REGISTRO DE MATERIAS</div>
-                        <div class="card-body">
-                            <div class="row p-1">
-                                <div class="col-3">
-                                    CODIGO:
-                                </div>
-                                <div class="col-3">
-                                    <input placeholder="codigo" required v-model="materia.codigo" type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row p-1">
-                                <div class="col-3">
-                                    NOMBRE:
-                                </div>
-                                <div class="col-6">
-                                    <input placeholder="nombre" required v-model="materia.nombre" type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row p-1">
-                                <div class="col-3">
-                                    UV:
-                                </div>
-                                <div class="col-9">
-                                    <input placeholder="uv" required v-model="materia.uv" type="text" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col text-center">
-                                    <button type="submit" id="btnGuardarMateria" class="btn btn-primary">GUARDAR</button>
-                                    <button type="reset" id="btnCancelarMateria" class="btn btn-warning">NUEVO</button>
-                                    <button type="button" @click="buscarMateria" id="btnBuscarMateria" class="btn btn-success">BUSCAR</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    `
+        nuevo() {
+            this.materia = { idMateria: '', codigo: '', nombre: '', uv: '' };
+        }
+    }
 };

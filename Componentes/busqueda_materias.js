@@ -1,73 +1,48 @@
 const busqueda_materias = {
-    data(){
-        return{
-            buscar:'',
-            materias:[]
-        }
-    },
-    methods:{
-        modificarMateria(materia){
-            this.$emit('modificar', materia);
-        },
-        async obtenerMaterias(){
-            this.materias = await db.materias.orderBy('codigo').filter(
-                materia => materia.codigo.toLowerCase().includes(this.buscar.toLowerCase()) 
-                    || materia.nombre.toLowerCase().includes(this.buscar.toLowerCase())
-            ).toArray();
-            if( this.materias.length<1 && this.buscar.length<=0){
-                fetch(`private/modulos/materias/materia.php?accion=consultar`)
-                    .then(response=>response.json())
-                    .then(data=>{
-                        this.materias = data;
-                        db.materias.bulkAdd(data);
-                    });
-            }
-        },
-        async eliminarMateria(materia, e){
-            e.stopPropagation();
-            alertify.confirm('Eliminar materias', `¿Está seguro de eliminar el materia ${materia.nombre}?`, async e=>{
-                await db.materias.delete(materia.idMateria);
-                fetch(`private/modulos/materias/materia.php?accion=eliminar&materias=${JSON.stringify(materia)}`)
-                    .then(response=>response.json())
-                    .then(data=>{
-                        if(data!=true) alertify.error(`Error al sincronizar con el servidor: ${data}`);
-                    });
-                this.obtenerMaterias();
-                alertify.success(`Materia ${materia.nombre} eliminada correctamente`);
-            }, () => {
-                //No hacer nada
-            });
-        },
-    },
     template: `
-        <div class="row">
-            <div class="col-6">
-                <table class="table table-striped table-hover" id="tblMaterias">
-                    <thead>
+        <div class="mt-2">
+            <div class="mb-2">
+                <input v-model="filtro" @keyup="filtrar" type="text" class="form-control form-control-sm shadow-sm" placeholder="🔍 Buscar materia...">
+            </div>
+            <div class="table-responsive shadow-sm">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
                         <tr>
-                            <th colspan="6">
-                                <input autocomplete="off" type="search" @keyup="obtenerMaterias()" v-model="buscar" placeholder="Buscar materia" class="form-control">
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>CODIGO</th>
-                            <th>NOMBRE</th>
-                            <th>UV</th>
-                            <th></th>
+                            <th>CÓDIGO</th><th>NOMBRE</th><th>UV</th><th class="text-center">ACCIONES</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr v-for="materia in materias" :key="materia.idMateria" @click="modificarMateria(materia)">
-                            <td>{{ materia.codigo }}</td>
-                            <td>{{ materia.nombre }}</td>
-                            <td>{{ materia.uv }}</td>
-                            <td>
-                                <button class="btn btn-danger" @click="eliminarMateria(materia, $event)">DEL</button>
+                    <tbody class="bg-white">
+                        <tr v-for="m in listaFiltrada" :key="m.idMateria">
+                            <td class="fw-bold">{{ m.codigo }}</td>
+                            <td>{{ m.nombre }}</td>
+                            <td>{{ m.uv }}</td>
+                            <td class="text-center">
+                                <button @click="$emit('modificar', m)" class="btn btn-info btn-sm text-white py-0 px-2">Editar</button>
+                                <button @click="eliminar(m.idMateria)" class="btn btn-danger btn-sm py-0 px-2 ms-1">Eliminar</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
-    `
+        </div>`,
+    data() { return { lista: [], listaFiltrada: [], filtro: '' } },
+    mounted() { this.obtenerMaterias(); },
+    methods: {
+        obtenerMaterias() {
+            const res = window.dbInstance.exec("SELECT * FROM materias");
+            this.lista = res.length > 0 ? res[0].values.map(f => {
+                let obj = {}; res[0].columns.forEach((col, i) => obj[col] = f[i]); return obj;
+            }) : [];
+            this.filtrar();
+        },
+        filtrar() {
+            this.listaFiltrada = this.lista.filter(m => m.nombre.toLowerCase().includes(this.filtro.toLowerCase()));
+        },
+        eliminar(id) {
+            alertify.confirm("SISTEMA", "¿Eliminar materia?", () => {
+                window.dbInstance.run("DELETE FROM materias WHERE idMateria = ?", [id]);
+                window.guardarCambios(); this.obtenerMaterias(); alertify.error("Eliminado");
+            }, () => {});
+        }
+    }
 };

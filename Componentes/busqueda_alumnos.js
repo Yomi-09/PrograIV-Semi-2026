@@ -1,80 +1,87 @@
 const busqueda_alumnos = {
-    data(){
-        return{
-            buscar:'',
-            alumnos:[]
-        }
-    },
-    
-    methods:{
-        modificarAlumno(alumno){
-            this.$emit('modificar', alumno);
-        },
-        async obtenerAlumnos(){
-            this.alumnos = await db.alumnos.filter(
-                alumno => alumno.codigo.toLowerCase().includes(this.buscar.toLowerCase()) 
-                    || alumno.nombre.toLowerCase().includes(this.buscar.toLowerCase())
-            ).toArray();
-            if( this.alumnos.length<1 && this.buscar.length<=0){
-                fetch(`private/modulos/alumnos/alumno.php?accion=consultar`)
-                    .then(response=>response.json())
-                    .then(data=>{
-                        this.alumnos = data;
-                        db.alumnos.bulkAdd(data);
-                    });
-            }
-        },
-        async eliminarAlumno(alumno, e){
-            e.stopPropagation();
-            alertify.confirm('Elimanar alumnos', `¿Está seguro de eliminar el alumno ${alumno.nombre}?`, async e=>{
-                await db.alumnos.delete(alumno.idAlumno);
-                fetch(`private/modulos/alumnos/alumno.php?accion=eliminar&alumnos=${JSON.stringify(alumno)}`)
-                    .then(response=>response.json())
-                    .then(data=>{
-                        if(data!=true) alertify.error(`Error al sincronizar con el servidor: ${data}`);
-                    });
-                this.obtenerAlumnos();
-                alertify.success(`Alumno ${alumno.nombre} eliminado correctamente`);
-            }, () => {
-                //No hacer nada
-            });
-        },
-    },
     template: `
-        <div class="row">
-            <div class="col-6">
-                <table class="table table-striped table-hover" id="tblAlumnos">
-                    <thead>
+        <div class="mt-2">
+            <div class="mb-2">
+                <input 
+                    v-model="filtro" 
+                    @keyup="filtrarAlumnos" 
+                    type="text" 
+                    class="form-control form-control-sm shadow-sm" 
+                    placeholder="🔍 Buscar por nombre o código...">
+            </div>
+
+            <div class="table-responsive shadow-sm">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
                         <tr>
-                            <th colspan="6">
-                                <input autocomplete="off" type="search" @keyup="obtenerAlumnos()" v-model="buscar" placeholder="Buscar alumno" class="form-control">
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>CODIGO</th>
-                            <th>NOMBRE</th>
-                            <th>DIRECCION</th>
-                            <th>EMAIL</th>
-                            <th>TELEFONO</th>
-                            <th>HASH</th>
-                            <th></th>
+                            <th style="width: 30%">CÓDIGO</th>
+                            <th style="width: 45%">NOMBRE</th>
+                            <th style="width: 25%" class="text-center">ACCIONES</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr v-for="alumno in alumnos" :key="alumno.idAlumno" @click="modificarAlumno(alumno)">
-                            <td>{{ alumno.codigo }}</td>
-                            <td>{{ alumno.nombre }}</td>
-                            <td>{{ alumno.direccion }}</td>
-                            <td>{{ alumno.email }}</td>
-                            <td>{{ alumno.telefono }}</td>
-                            <td>{{ alumno.hash }}</td>
-                            <td>
-                                <button class="btn btn-danger" @click="eliminarAlumno(alumno, $event)">DEL</button>
+                    <tbody class="bg-white">
+                        <tr v-for="a in listaFiltrada" :key="a.idAlumno">
+                            <td class="fw-bold">{{ a.codigo }}</td>
+                            <td>{{ a.nombre }}</td>
+                            <td class="text-center">
+                                <button @click="$emit('modificar', a)" class="btn btn-info btn-sm text-white py-0 px-2">Editar</button>
+                                <button @click="eliminar(a.idAlumno)" class="btn btn-danger btn-sm py-0 px-2 ms-1">Eliminar</button>
                             </td>
+                        </tr>
+                        <tr v-if="listaFiltrada.length == 0">
+                            <td colspan="3" class="text-center py-3 text-muted">No se encontraron resultados</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
-    `
+        </div>`,
+    data() {
+        return {
+            lista: [],
+            listaFiltrada: [],
+            filtro: ''
+        }
+    },
+    mounted() {
+        this.obtenerAlumnos();
+    },
+    methods: {
+        obtenerAlumnos() {
+            try {
+                const res = window.dbInstance.exec("SELECT * FROM alumnos");
+                if (res.length > 0) {
+                    this.lista = res[0].values.map(fila => {
+                        let obj = {};
+                        res[0].columns.forEach((col, i) => obj[col] = fila[i]);
+                        return obj;
+                    });
+                    this.listaFiltrada = this.lista; // Al inicio mostramos todo
+                } else {
+                    this.lista = [];
+                    this.listaFiltrada = [];
+                }
+            } catch (e) {
+                console.error("Error al obtener datos:", e);
+            }
+        },
+        filtrarAlumnos() {
+            const buscar = this.filtro.toLowerCase();
+            this.listaFiltrada = this.lista.filter(a => 
+                a.nombre.toLowerCase().includes(buscar) || 
+                a.codigo.toLowerCase().includes(buscar)
+            );
+        },
+        eliminar(id) {
+            alertify.confirm("SISTEMA UGB", "¿Está seguro de eliminar este registro?", 
+                () => {
+                    window.dbInstance.run("DELETE FROM alumnos WHERE idAlumno = ?", [id]);
+                    window.guardarCambios();
+                    this.obtenerAlumnos(); // Refresca la lista interna
+                    this.filtrarAlumnos(); // Refresca la vista filtrada
+                    alertify.error("Registro eliminado");
+                }, 
+                () => { /* Cancelar */ }
+            ).set('labels', {ok:'Eliminar', cancel:'Cancelar'});
+        }
+    }
 };

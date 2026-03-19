@@ -1,135 +1,31 @@
 const alumnos = {
-    props:['forms'],
-    data(){
-        return{
-            alumno:{
-                idAlumno:0,
-                codigo:"",
-                nombre:"",
-                direccion:"",
-                email:"",
-                telefono:""
-            },
-            accion:'nuevo',
-            idAlumno:0,
-            data_alumnos:[]
-        }
-    },
-    methods:{
-        buscarAlumno(){
-            this.forms.busqueda_alumnos.mostrar = !this.forms.busqueda_alumnos.mostrar;
+    template: `
+        <div class="card card-body mb-3 shadow-sm">
+            <h5>Registro de Alumnos</h5>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    Código: <input v-model="alumno.codigo" class="form-control">
+                </div>
+                <div class="col-md-8">
+                    Nombre: <input v-model="alumno.nombre" class="form-control">
+                </div>
+            </div>
+            <div class="mt-3">
+                <button @click="guardar" class="btn btn-primary">Guardar</button>
+                <button @click="nuevo" class="btn btn-secondary ms-2">Nuevo</button>
+            </div>
+        </div>`,
+    data() { return { alumno: { idAlumno: '', codigo: '', nombre: '' } } },
+    methods: {
+        guardar() {
+            if(!this.alumno.idAlumno) this.alumno.idAlumno = uuid.v4();
+            window.dbInstance.run("INSERT OR REPLACE INTO alumnos (idAlumno, codigo, nombre) VALUES (?, ?, ?)", 
+                [this.alumno.idAlumno, this.alumno.codigo, this.alumno.nombre]);
+            alertify.success("Guardado");
+            this.nuevo();
             this.$emit('buscar');
         },
-        modificarAlumno(alumno){
-            this.accion = 'modificar';
-            this.idAlumno = alumno.idAlumno;
-            this.alumno.codigo = alumno.codigo;
-            this.alumno.nombre = alumno.nombre;
-            this.alumno.direccion = alumno.direccion;
-            this.alumno.email = alumno.email;
-            this.alumno.telefono = alumno.telefono;
-        },
-        async guardarAlumno() {
-            let datos = {
-                idAlumno: this.accion=='modificar' ? this.idAlumno : this.getId(),
-                codigo: this.alumno.codigo,
-                nombre: this.alumno.nombre,
-                direccion: this.alumno.direccion,
-                email: this.alumno.email,
-                telefono: this.alumno.telefono
-            };
-            //datos.hash = sha256(JSON.stringify(datos));
-            this.buscar = datos.codigo;
-            //await this.obtenerAlumnos();
-
-            if(this.data_alumnos.length > 0 && this.accion=='nuevo'){
-                alertify.error(`El codigo del alumno ya existe, ${this.data_alumnos[0].nombre}`);
-                return; //Termina la ejecucion de la funcion
-            }
-            db.alumnos.put(datos);
-            fetch(`private/modulos/alumnos/alumno.php?accion=${this.accion}&alumnos=${JSON.stringify(datos)}`)
-                .then(response=>response.json())
-                .then(data=>{
-                    if(data!=true) alertify.error(`Error al sincronizar con el servidor: ${data}`);
-                });
-            this.limpiarFormulario();
-            alertify.success(`${datos.nombre} guardado correctamente`);
-            //this.obtenerAlumnos();
-        },
-        getId(){
-            return uuid.v4();
-        },
-        limpiarFormulario(){
-            this.accion = 'nuevo';
-            this.idAlumno = 0;
-            this.alumno.codigo = '';
-            this.alumno.nombre = '';
-            this.alumno.direccion = '';
-            this.alumno.email = '';
-            this.alumno.telefono = '';
-        },
-    },
-    template: `
-        <div class="row">
-            <div class="col-6">
-                <form id="frmAlumnos" @submit.prevent="guardarAlumno" @reset.prevent="limpiarFormulario">
-                    <div class="card mb-3" style="max-width: 36rem; background-color:#ffd6e7;">
-                        <div class="card-header">REGISTRO DE ALUMNOS</div>
-                        <div class="card-body">
-                            <div class="row p-1">
-                                <div class="col-3">
-                                    CODIGO:
-                                </div>
-                                <div class="col-3">
-                                    <input placeholder="codigo" required v-model="alumno.codigo" type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row p-1">
-                                <div class="col-3">
-                                    NOMBRE:
-                                </div>
-                                <div class="col-6">
-                                    <input placeholder="nombre" required v-model="alumno.nombre" type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row p-1">
-                                <div class="col-3">
-                                    DIRECCION:
-                                </div>
-                                <div class="col-9">
-                                    <input placeholder="direccion" required v-model="alumno.direccion" type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row p-1">
-                                <div class="col-3">
-                                    EMAIL:
-                                </div>
-                                <div class="col-6">
-                                    <input placeholder="email" required v-model="alumno.email" type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row p-1">
-                                <div class="col-3">
-                                    TELEFONO:
-                                </div>
-                                <div class="col-4">
-                                    <input placeholder="telefono" required v-model="alumno.telefono" type="text" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col text-center">
-                                    <button type="submit" id="btnGuardarAlumno" class="btn btn-primary">GUARDAR</button>
-                                    <button type="reset" id="btnCancelarAlumno" class="btn btn-warning">NUEVO</button>
-                                    <button type="button" @click="buscarAlumno" id="btnBuscarAlumno" class="btn btn-success">BUSCAR</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    `
-    
+        modificarAlumno(d) { this.alumno = {...d}; },
+        nuevo() { this.alumno = { idAlumno: '', codigo: '', nombre: '' }; }
+    }
 };
