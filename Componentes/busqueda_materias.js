@@ -1,48 +1,64 @@
 const busqueda_materias = {
+    data(){
+        return{
+            buscar:'',
+            materias:[]
+        }
+
+    },
+    methods:{
+        modificarMateria(materia){
+            this.$emit('modificar', materia);
+        },
+        async obtenerMaterias(){
+            this.materias = await db.materias.orderBy('codigo').filter(
+                materia => materia.codigo.toLowerCase().includes(this.buscar.toLowerCase()) 
+                    || materia.nombre.toLowerCase().includes(this.buscar.toLowerCase())
+            ).toArray();
+        },
+        async eliminarMateria(materia, e){
+            e.stopPropagation();
+            alertify.confirm('Eliminar materias', `¿Está seguro de eliminar el materia ${materia.nombre}?`, async e=>{
+                await db.materias.delete(materia.idMateria);
+                this.obtenerMaterias();
+                alertify.success(`Materia ${materia.nombre} eliminada correctamente`);
+            }, () => {
+                //No hacer nada
+            });
+        },
+    },
     template: `
-        <div class="mt-2">
-            <div class="mb-2">
-                <input v-model="filtro" @keyup="filtrar" type="text" class="form-control form-control-sm shadow-sm" placeholder="🔍 Buscar materia...">
-            </div>
-            <div class="table-responsive shadow-sm">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-dark">
+        <div class="row">
+            <div class="col-6">
+                <table class="table table-success table-striped" id="tblMaterias">
+                    <thead>
                         <tr>
-                            <th>CÓDIGO</th><th>NOMBRE</th><th>UV</th><th class="text-center">ACCIONES</th>
+                            <th colspan="6">
+                                <input autocomplete="off" type="search" @keyup="obtenerMaterias()" v-model="buscar" placeholder="Buscar materia" class="form-control">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>CODIGO</th>
+                            <th>NOMBRE</th>
+                            <th>UV</th>
+                           
+                            <th>HASH</th>
+                            <th></th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white">
-                        <tr v-for="m in listaFiltrada" :key="m.idMateria">
-                            <td class="fw-bold">{{ m.codigo }}</td>
-                            <td>{{ m.nombre }}</td>
-                            <td>{{ m.uv }}</td>
-                            <td class="text-center">
-                                <button @click="$emit('modificar', m)" class="btn btn-info btn-sm text-white py-0 px-2">Editar</button>
-                                <button @click="eliminar(m.idMateria)" class="btn btn-danger btn-sm py-0 px-2 ms-1">Eliminar</button>
+                    <tbody>
+                        <tr v-for="materia in materias" :key="materia.idMateria" @click="modificarMateria(materia)">
+                            <td>{{ materia.codigo }}</td>
+                            <td>{{ materia.nombre }}</td>
+                            <td>{{ materia.uv }}</td>
+                            <td>{{ materia.hash }}</td>
+                            <td>
+                                <button class="btn btn-danger" @click="eliminarMateria(materia, $event)">DEL</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>`,
-    data() { return { lista: [], listaFiltrada: [], filtro: '' } },
-    mounted() { this.obtenerMaterias(); },
-    methods: {
-        obtenerMaterias() {
-            const res = window.dbInstance.exec("SELECT * FROM materias");
-            this.lista = res.length > 0 ? res[0].values.map(f => {
-                let obj = {}; res[0].columns.forEach((col, i) => obj[col] = f[i]); return obj;
-            }) : [];
-            this.filtrar();
-        },
-        filtrar() {
-            this.listaFiltrada = this.lista.filter(m => m.nombre.toLowerCase().includes(this.filtro.toLowerCase()));
-        },
-        eliminar(id) {
-            alertify.confirm("SISTEMA", "¿Eliminar materia?", () => {
-                window.dbInstance.run("DELETE FROM materias WHERE idMateria = ?", [id]);
-                window.guardarCambios(); this.obtenerMaterias(); alertify.error("Eliminado");
-            }, () => {});
-        }
-    }
+        </div>
+    `
 };

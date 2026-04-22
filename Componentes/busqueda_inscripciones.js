@@ -1,77 +1,89 @@
 const busqueda_inscripciones = {
-    template: `
-        <div class="mt-2">
-            <div class="mb-2">
-                <input v-model="filtro" @keyup="filtrar" type="text" class="form-control form-control-sm shadow-sm" placeholder="🔍 Buscar por alumno o materia...">
-            </div>
-            <div class="table-responsive shadow-sm">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ALUMNO</th>
-                            <th>MATERIA</th>
-                            <th>DOCENTE</th>
-                            <th class="text-center">ACCIONES</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white">
-                        <tr v-for="i in listaFiltrada" :key="i.idInscripcion">
-                            <td>{{ i.alumno }}</td>
-                            <td>{{ i.materia }}</td>
-                            <td>{{ i.docente }}</td>
-                            <td class="text-center">
-                                <button @click="eliminar(i.idInscripcion)" class="btn btn-danger btn-sm py-0 px-2">Eliminar</button>
-                            </td>
-                        </tr>
-                        <tr v-if="listaFiltrada.length == 0">
-                            <td colspan="4" class="text-center py-3 text-muted">No hay inscripciones registradas</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>`,
+    props: ['forms'],
     data() {
-        return { lista: [], listaFiltrada: [], filtro: '' }
-    },
-    mounted() {
-        this.obtenerInscripciones();
+        return {
+            buscar: '',
+            inscripciones: []
+        }
     },
     methods: {
-        obtenerInscripciones() {
-            try {
-                // Consulta avanzada para traer nombres en lugar de IDs
-                const sql = `
-                    SELECT i.idInscripcion, a.nombre as alumno, m.nombre as materia, d.nombre as docente
-                    FROM inscripciones i
-                    JOIN alumnos a ON i.idAlumno = a.idAlumno
-                    JOIN materias m ON i.idMateria = m.idMateria
-                    JOIN docentes d ON i.idDocente = d.idDocente
-                `;
-                const res = window.dbInstance.exec(sql);
-                this.lista = res.length > 0 ? res[0].values.map(f => {
-                    let obj = {};
-                    res[0].columns.forEach((col, i) => obj[col] = f[i]);
-                    return obj;
-                }) : [];
-                this.filtrar();
-            } catch (e) {
-                this.lista = [];
-            }
+        modificarInscripcion(inscripcion) {
+            this.$emit('modificar', inscripcion);
         },
-        filtrar() {
-            const busqueda = this.filtro.toLowerCase();
-            this.listaFiltrada = this.lista.filter(i => 
-                i.alumno.toLowerCase().includes(busqueda) || 
-                i.materia.toLowerCase().includes(busqueda)
+        async obtenerInscripciones() {
+            this.inscripciones = await db.inscripciones.filter(
+                inscripcion =>
+                    inscripcion.nombre_alumno.toLowerCase().includes(this.buscar.toLowerCase()) ||
+                    inscripcion.codigo_materia.toLowerCase().includes(this.buscar.toLowerCase()) ||
+                    inscripcion.nombre_materia.toLowerCase().includes(this.buscar.toLowerCase()) ||
+                    inscripcion.ciclo_periodo.toLowerCase().includes(this.buscar.toLowerCase()) ||
+                    inscripcion.estado.toLowerCase().includes(this.buscar.toLowerCase())
+            ).toArray();
+        },
+        async eliminarInscripcion(inscripcion, e) {
+            e.stopPropagation();
+            alertify.confirm(
+                'Eliminar inscripción',
+                `¿Está seguro de eliminar la inscripción de ${inscripcion.nombre_alumno} en ${inscripcion.nombre_materia}?`,
+                async () => {
+                    await db.inscripciones.delete(inscripcion.idInscripcion);
+                    this.obtenerInscripciones();
+                    alertify.success(`Inscripción eliminada correctamente`);
+                },
+                () => {}
             );
         },
-        eliminar(id) {
-            alertify.confirm("SISTEMA UGB", "¿Eliminar esta inscripción?", () => {
-                window.dbInstance.run("DELETE FROM inscripciones WHERE idInscripcion = ?", [id]);
-                window.guardarCambios();
-                this.obtenerInscripciones();
-                alertify.error("Inscripción eliminada");
-            }, () => {});
-        }
-    }
+    },
+    template: `
+        <div>
+            <div class="row mb-2">
+                <th colspan="6">
+                     <input autocomplete="off" type="search" @keyup="obtenerInscripciones()" v-model="buscar" placeholder="Buscar inscripción" class="form-control">
+                     </th>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ALUMNO</th>
+                                <th>CÓDIGO</th>
+                                <th>MATERIA</th>
+                                <th>CICLO</th>
+                                <th>FECHA</th>
+                                <th>ESTADO</th>
+                                <th>HASH</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr v-for="inscripcion in inscripciones"
+                                :key="inscripcion.idInscripcion"
+                                @click="modificarInscripcion(inscripcion)">
+
+                                <td>{{ inscripcion.nombre_alumno }}</td>
+                                <td>{{ inscripcion.codigo_materia }}</td>
+                                <td>{{ inscripcion.nombre_materia }}</td>
+                                <td>{{ inscripcion.ciclo_periodo }}</td>
+                                <td>{{ inscripcion.fecha_inscripcion }}</td>
+                                <td>{{ inscripcion.estado }}</td>
+                                <td>{{ inscripcion.hash }}</td>
+
+                                <td>
+                                    <button class="btn btn-danger btn-sm"
+                                        @click.stop="eliminarInscripcion(inscripcion, $event)">
+                                        DEL
+                                    </button>
+                                </td>
+
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    `
 };

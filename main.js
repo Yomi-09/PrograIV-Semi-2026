@@ -1,63 +1,62 @@
-const { createApp } = Vue;
+const { createApp } = Vue,
+    Dexie = window.Dexie,
+    sha256 = CryptoJS.SHA256;
 
-const app = createApp({
-    data() {
-        return {
-            forms: {
-                alumnos: { mostrar: true },
-                materias: { mostrar: false },
-                docentes: { mostrar: false },
-                matriculas: { mostrar: false },
-                inscripciones: { mostrar: false }
+     window.db = new Dexie("db_academica");
+    window.db.version(2).stores({
+        alumnos: "++idAlumno,codigo,nombre,direccion,email,telefono,municipio,departamento,fecha_de_nacimiento,sexo,hash",
+        materias: "++idMateria,codigo,nombre,uv,hash",
+        docentes: "++idDocente,codigo,nombre,direccion,email,telefono,escalafon,hash",
+        matriculas: "++idMatricula,codigo_alumno,ciclo_periodo,hash",
+        inscripciones: "++idInscripcion,codigo_alumno,codigo_materia,fecha_inscripcion,ciclo_periodo,hash",
+    });
+
+createApp({
+    components:{
+        alumnos,
+        busqueda_alumnos,
+        materias,
+        busqueda_materias,
+        docentes,
+        busqueda_docentes,
+        matriculas,
+        busqueda_matriculas,
+        inscripciones,
+        busqueda_inscripciones
+        
+    },
+    data(){
+        return{
+            forms:{
+                alumnos:{mostrar:false},
+                busqueda_alumnos:{mostrar:false},
+                materias:{mostrar:false},
+                busqueda_materias:{mostrar:false},
+                docentes:{mostrar:false},
+                busqueda_docentes:{mostrar:false},
+                matriculas:{mostrar:false},
+                busqueda_matriculas:{mostrar:false},
+                inscripciones:{mostrar:false},
+                busqueda_inscripciones:{mostrar:false}
             }
         }
     },
-    methods: {
-        abrirVentana(ventana) {
-            Object.keys(this.forms).forEach(f => this.forms[f].mostrar = false);
-            this.forms[ventana].mostrar = true;
-            if((ventana === 'matriculas' || ventana === 'inscripciones') && this.$refs[ventana]) {
-                this.$refs[ventana].cargarDatos();
-            }
+    methods:{
+        buscar(ventana, metodo){
+            this.$refs[ventana][metodo]();
         },
-        buscar(ref, metodo) {
-            if (this.$refs[ref]) this.$refs[ref][metodo]();
-        },
-        modificar(comp, metodo, datos) {
-            if (this.$refs[comp]) this.$refs[comp][metodo](datos);
+     abrirVentana(ventana){
+    const estadoActual = this.forms[ventana].mostrar;
+
+    Object.keys(this.forms).forEach(key => {
+        this.forms[key].mostrar = false;
+    });
+
+    this.forms[ventana].mostrar = !estadoActual;
+},
+        modificar(ventana, metodo, data){
+            this.$refs[ventana][metodo](data);
         }
-    }
-});
-
-// Registro con los nombres que tienes en tus archivos JS
-app.component('alumnos', alumnos);
-app.component('busqueda_alumnos', busqueda_alumnos);
-app.component('materias', materias);
-app.component('busqueda_materias', busqueda_materias);
-app.component('docentes', docentes);
-app.component('busqueda_docentes', busqueda_docentes);
-app.component('matriculas', matriculas); // plural
-app.component('busqueda_matriculas', busqueda_matriculas); // plural
-app.component('inscripciones', inscripciones); // plural
-app.component('busqueda_inscripciones', busqueda_inscripciones); // plural
-
-async function iniciarSistema() {
-    try {
-        const config = { locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${f}` };
-        const SQL = await initSqlJs(config);
-        window.dbInstance = new SQL.Database();
-
-        window.dbInstance.run(`
-            CREATE TABLE IF NOT EXISTS alumnos (idAlumno TEXT PRIMARY KEY, codigo TEXT, nombre TEXT);
-            CREATE TABLE IF NOT EXISTS materias (idMateria TEXT PRIMARY KEY, codigo TEXT, nombre TEXT, uv TEXT);
-            CREATE TABLE IF NOT EXISTS docentes (idDocente TEXT PRIMARY KEY, codigo TEXT, nombre TEXT);
-            CREATE TABLE IF NOT EXISTS matricula (idMatricula TEXT PRIMARY KEY, idAlumno TEXT, idMateria TEXT, idDocente TEXT);
-            CREATE TABLE IF NOT EXISTS inscripcion (idInscripcion TEXT PRIMARY KEY, idAlumno TEXT, idMateria TEXT);
-        `);
-        
-        window.guardarCambios = () => { console.log("DB Lista"); };
-        app.mount('#app');
-    } catch (e) { console.error(e); }
-}
-
-iniciarSistema();
+    },
+   
+}).mount("#app");
