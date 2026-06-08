@@ -1,132 +1,1047 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.public')
 
-        <title>Laravel</title>
+@section('title', 'HidroVida - Panel Principal')
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+@section('styles')
+<style>
+        .hero-section {
+            padding: 6rem 0 4rem;
+            text-align: center;
+        }
+        .hero-title {
+            color: #1a5c8b;
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        .hero-subtitle {
+            color: #299bc4;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 2.5rem;
+            line-height: 1.5;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn-primary-custom {
+            background-color: #255f84;
+            color: white;
+            padding: 0.8rem 2.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-primary-custom:hover { background-color: #1b4b6b; color: white; }
 
-        <!-- Styles -->
-        <style>
-            /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}a{background-color:transparent}[hidden]{display:none}html{font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;line-height:1.5}*,:after,:before{box-sizing:border-box;border:0 solid #e2e8f0}a{color:inherit;text-decoration:inherit}svg,video{display:block;vertical-align:middle}video{max-width:100%;height:auto}.bg-white{--bg-opacity:1;background-color:#fff;background-color:rgba(255,255,255,var(--bg-opacity))}.bg-gray-100{--bg-opacity:1;background-color:#f7fafc;background-color:rgba(247,250,252,var(--bg-opacity))}.border-gray-200{--border-opacity:1;border-color:#edf2f7;border-color:rgba(237,242,247,var(--border-opacity))}.border-t{border-top-width:1px}.flex{display:flex}.grid{display:grid}.hidden{display:none}.items-center{align-items:center}.justify-center{justify-content:center}.font-semibold{font-weight:600}.h-5{height:1.25rem}.h-8{height:2rem}.h-16{height:4rem}.text-sm{font-size:.875rem}.text-lg{font-size:1.125rem}.leading-7{line-height:1.75rem}.mx-auto{margin-left:auto;margin-right:auto}.ml-1{margin-left:.25rem}.mt-2{margin-top:.5rem}.mr-2{margin-right:.5rem}.ml-2{margin-left:.5rem}.mt-4{margin-top:1rem}.ml-4{margin-left:1rem}.mt-8{margin-top:2rem}.ml-12{margin-left:3rem}.-mt-px{margin-top:-1px}.max-w-6xl{max-width:72rem}.min-h-screen{min-height:100vh}.overflow-hidden{overflow:hidden}.p-6{padding:1.5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.pt-8{padding-top:2rem}.fixed{position:fixed}.relative{position:relative}.top-0{top:0}.right-0{right:0}.shadow{box-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px 0 rgba(0,0,0,.06)}.text-center{text-align:center}.text-gray-200{--text-opacity:1;color:#edf2f7;color:rgba(237,242,247,var(--text-opacity))}.text-gray-300{--text-opacity:1;color:#e2e8f0;color:rgba(226,232,240,var(--text-opacity))}.text-gray-400{--text-opacity:1;color:#cbd5e0;color:rgba(203,213,224,var(--text-opacity))}.text-gray-500{--text-opacity:1;color:#a0aec0;color:rgba(160,174,192,var(--text-opacity))}.text-gray-600{--text-opacity:1;color:#718096;color:rgba(113,128,150,var(--text-opacity))}.text-gray-700{--text-opacity:1;color:#4a5568;color:rgba(74,85,104,var(--text-opacity))}.text-gray-900{--text-opacity:1;color:#1a202c;color:rgba(26,32,44,var(--text-opacity))}.underline{text-decoration:underline}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.w-5{width:1.25rem}.w-8{width:2rem}.w-auto{width:auto}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}@media (min-width:640px){.sm\:rounded-lg{border-radius:.5rem}.sm\:block{display:block}.sm\:items-center{align-items:center}.sm\:justify-start{justify-content:flex-start}.sm\:justify-between{justify-content:space-between}.sm\:h-20{height:5rem}.sm\:ml-0{margin-left:0}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:pt-0{padding-top:0}.sm\:text-left{text-align:left}.sm\:text-right{text-align:right}}@media (min-width:768px){.md\:border-t-0{border-top-width:0}.md\:border-l{border-left-width:1px}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (min-width:1024px){.lg\:px-8{padding-left:2rem;padding-right:2rem}}@media (prefers-color-scheme:dark){.dark\:bg-gray-800{--bg-opacity:1;background-color:#2d3748;background-color:rgba(45,55,72,var(--bg-opacity))}.dark\:bg-gray-900{--bg-opacity:1;background-color:#1a202c;background-color:rgba(26,32,44,var(--bg-opacity))}.dark\:border-gray-700{--border-opacity:1;border-color:#4a5568;border-color:rgba(74,85,104,var(--border-opacity))}.dark\:text-white{--text-opacity:1;color:#fff;color:rgba(255,255,255,var(--text-opacity))}.dark\:text-gray-400{--text-opacity:1;color:#cbd5e0;color:rgba(203,213,224,var(--text-opacity))}.dark\:text-gray-500{--tw-text-opacity:1;color:#6b7280;color:rgba(107,114,128,var(--tw-text-opacity))}}
-        </style>
+        .alert-banner {
+            border: 2px solid var(--alert-red);
+            background-color: #ffeeee;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            margin-top: 2rem;
+        }
+        .alert-banner-left { display: flex; align-items: center; gap: 1.5rem; }
+        .alert-icon-triangle { color: var(--alert-red); font-size: 3rem; line-height: 1; }
+        .alert-banner h3 { color: var(--alert-red); font-weight: 800; margin: 0; font-size: 1.3rem; }
+        .alert-banner p { margin: 0; font-weight: 500; color: #333; }
+        .btn-red {
+            background-color: var(--alert-red);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-red:hover { background-color: #e0484d; color: white; }
 
-        <style>
-            body {
-                font-family: 'Nunito', sans-serif;
+        .panel-container {
+            background-color: #d8e2eb;
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .panel-title {
+            color: var(--primary-dark);
+            font-weight: 800;
+            margin-bottom: 2rem;
+            font-size: 1.4rem;
+        }
+
+        .gauge-section-new {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        .gauge-container { text-align: center; }
+        
+        .premium-gauge-card {
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+        .gauge-card-title {
+            color: #1b3650;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .gauge-svg-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .gauge-svg {
+            display: block;
+        }
+        .gauge-center-content {
+            position: absolute;
+            bottom: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+        }
+        .gauge-center-content i {
+            margin-bottom: 0.2rem;
+            transition: all 0.3s ease;
+        }
+        .gauge-center-label {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #1b3650;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.1rem;
+        }
+        .gauge-center-status {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        
+        .status-items { display: flex; flex-direction: column; gap: 2rem; }
+        .status-item { display: flex; align-items: center; gap: 1.5rem; }
+        .status-icon { font-size: 3rem; color: #4b6b8a; }
+        .status-item h4 { color: var(--primary-dark); font-weight: 800; font-size: 1.2rem; margin: 0 0 0.2rem 0; }
+        .status-item .highlight-text { color: var(--primary-dark); font-weight: 700; font-size: 1rem; }
+        .status-item .highlight-text span { color: var(--primary-light); }
+        .status-item p { margin: 0; font-size: 0.8rem; color: #5a7b9c; }
+
+        .action-banner {
+            background-color: #d8e2eb;
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .action-banner-left { display: flex; align-items: center; gap: 1.5rem; }
+        .action-banner-left i { font-size: 3.5rem; color: #4b6b8a; }
+        .action-banner h3 { color: var(--primary-dark); font-weight: 800; margin: 0 0 0.5rem 0; }
+        .action-banner p { color: var(--primary-dark); font-weight: 600; margin: 0; }
+        
+        .btn-teal {
+            background-color: var(--accent-teal);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-teal:hover { background-color: #24a095; color: white; }
+
+        .tips-section h3 { color: var(--primary-dark); font-weight: 800; margin-bottom: 1.5rem; }
+        .tip-card {
+            background: #fae8e8;
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        .tip-card.bg-blue { background: #eef2ff; }
+        .tip-card.bg-green { background: #f0fdf4; }
+        .tip-card-img-placeholder {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: rgba(0,0,0,0.2);
+            background: rgba(255,255,255,0.5);
+            border-radius: 8px;
+        }
+        .tip-card img { width: 80px; height: auto; object-fit: contain; }
+        .tip-card h5 { color: var(--primary-dark); font-weight: 800; font-size: 1.1rem; margin: 0 0 0.5rem 0; }
+        .tip-card p { margin: 0; font-size: 0.85rem; color: #4b6b8a; font-weight: 500; }
+
+        .compliance-banner {
+            background-color: #d8e2eb;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .compliance-banner-left { display: flex; align-items: center; gap: 1rem; color: var(--primary-dark); font-weight: 600; }
+        .compliance-banner-left i { font-size: 1.5rem; color: var(--accent-teal); }
+        .compliance-link {
+            color: var(--primary-dark);
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.4);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .compliance-link:hover { background: rgba(255,255,255,0.7); }
+
+        
+        .dot-flashing {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #2cc0b3;
+            animation: dot-flashing-anim 1s infinite alternate;
+        }
+        @keyframes dot-flashing-anim {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .extra-small { font-size: 0.8rem; }
+        .extra-extra-small { font-size: 0.72rem; }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 1rem; padding: 1rem; }
+            .header-nav { margin-left: 0; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+            .hero-section { text-align: center; }
+            .hero-section img { margin-top: 2rem; max-width: 80%; }
+            .alert-banner { flex-direction: column; text-align: center; gap: 1.5rem; }
+            .alert-banner-left { flex-direction: column; gap: 0.5rem; }
+            .gauge-section-new { flex-direction: column; }
+            .action-banner { flex-direction: column; text-align: center; }
+            .action-banner-left { flex-direction: column; gap: 0.5rem; }
+            .compliance-banner { flex-direction: column; text-align: center; }
+            .tip-card { flex-direction: column; text-align: center; }
+            .custom-footer .row > div { margin-bottom: 2rem; text-align: center; }
+            .footer-logo { align-items: center; }
+        }
+
+        .alert-premium-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .alert-premium-flex .flex-col-left {
+            flex: 1;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .alert-premium-flex .flex-col-center {
+            flex: 2;
+            text-align: center;
+        }
+        .alert-premium-flex .flex-col-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .alert-premium-flex {
+                flex-direction: column;
+                gap: 1.5rem !important;
             }
-        </style>
-    </head>
-    <body class="antialiased">
-        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
-            @if (Route::has('login'))
-                <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-                    @auth
-                        <a href="{{ url('/home') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Home</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</a>
+            .alert-premium-flex .flex-col-left,
+            .alert-premium-flex .flex-col-center,
+            .alert-premium-flex .flex-col-right {
+                flex: 1 1 auto;
+                justify-content: center;
+                width: 100%;
+                text-align: center;
+            }
+        }
+</style>
+@endsection
 
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a>
-                        @endif
-                    @endauth
+@section('content')
+@php
+    $ph = isset($sensor) ? $sensor->ph_level : 7.2;
+    $time_ago = isset($sensor) ? $sensor->updated_at->diffForHumans() : 'Hace unos minutos';
+    
+    if ($ph >= 6.5 && $ph <= 8.5) {
+        $statusColor = '#2cc0b3'; // teal/green
+        $statusText = 'SEGURO';
+        $statusIcon = 'bi-shield-fill-check';
+        $optimoText = 'Óptimo';
+        $optimoSubText = 'Tu agua es apta para el consumo';
+        $indicatorX = 85.3;
+        $indicatorY = 51.0;
+    } elseif (($ph >= 6.0 && $ph < 6.5) || ($ph > 8.5 && $ph <= 9.0)) {
+        $statusColor = '#f1c40f'; // yellow
+        $statusText = 'PRECAUCIÓN';
+        $statusIcon = 'bi-shield-fill-exclamation';
+        $optimoText = 'Revisar';
+        $optimoSubText = 'Precaución - pH ligeramente fuera de rango';
+        $indicatorX = 214.7;
+        $indicatorY = 51.0;
+    } else {
+        $statusColor = '#e74c3c'; // red
+        $statusText = 'RIESGO';
+        $statusIcon = 'bi-shield-fill-x';
+        $optimoText = 'Peligro';
+        $optimoSubText = 'No apta para el consumo humano';
+        $indicatorX = 254.6;
+        $indicatorY = 106.0;
+    }
+@endphp
+
+@if(session()->has('usuario_id'))
+    <!-- Cut-off warning banner if 4 or more unpaid months -->
+    @if(isset($meses_sin_pagar) && $meses_sin_pagar >= 4)
+        <div class="card border-0 shadow-sm rounded-4 mb-4" style="background-color: #fff5f5; border-left: 6px solid var(--alert-red) !important;">
+            <div class="card-body p-4 d-flex align-items-center gap-3">
+                <div class="rounded-circle p-2.5 d-flex align-items-center justify-content-center" style="background-color: #ffe3e3; width: 56px; height: 56px; flex-shrink: 0;">
+                    <i class="bi bi-exclamation-octagon-fill text-danger fs-3"></i>
                 </div>
-            @endif
+                <div>
+                    <h5 class="mb-1 fw-bold text-danger" style="font-size: 1.2rem;">¡ADVERTENCIA CRÍTICA DE CORTE DE SERVICIO!</h5>
+                    <p class="mb-0 text-muted small">
+                        Tienes <strong>{{ $meses_sin_pagar }} meses</strong> de facturación pendientes de pago. 
+                        Tu cuenta ha entrado en estado de mora y se ha programado la <strong>suspensión y corte inmediato del servicio de agua potable</strong>. 
+                        Por favor, cancela tus recibos pendientes a la brevedad para evitar la suspensión.
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endif
+   
+    @if(isset($alerta_prioritaria) && in_array($alerta_prioritaria->tipo, ['red', 'yellow', 'blue']))
+        @php
+            $bg_color = '#fffdeb';
+            $border_color = '#ffc107';
+            $icon_bg = '#fff5cc';
+            $icon_class = 'bi-exclamation-circle-fill text-warning';
+            
+            if ($alerta_prioritaria->tipo === 'red') {
+                $bg_color = '#fff5f5';
+                $border_color = '#ff5a5f';
+                $icon_bg = '#ffe3e3';
+                $icon_class = 'bi-exclamation-triangle-fill text-danger';
+            } elseif ($alerta_prioritaria->tipo === 'blue') {
+                $bg_color = '#eef6fc';
+                $border_color = '#299bc4';
+                $icon_bg = '#cce3ff';
+                $icon_class = 'bi-info-circle-fill text-primary';
+            }
+        @endphp
+        <div class="card border-0 shadow-sm rounded-4 mb-4" style="background-color: {{ $bg_color }}; border-left: 5px solid {{ $border_color }} !important;">
+            <div class="card-body p-4 alert-premium-flex gap-3">
+                <div class="flex-col-left">
+                    <div class="rounded-circle p-2.5 d-flex align-items-center justify-content-center" style="background-color: {{ $icon_bg }}; width: 58px; height: 58px; flex-shrink: 0;">
+                        <i class="bi {{ $icon_class }} fs-2"></i>
+                    </div>
+                </div>
+                <div class="flex-col-center">
+                    <h5 class="mb-1 fw-bold text-dark" style="font-size: 1.35rem; margin: 0;">{{ $alerta_prioritaria->titulo }}</h5>
+                    @php
+                        $alertaPrioritariaFecha = $alerta_prioritaria->fecha_texto;
+                        try {
+                            if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $alerta_prioritaria->fecha_texto)) {
+                                $alertaPrioritariaFecha = \Carbon\Carbon::parse($alerta_prioritaria->fecha_texto)->isoFormat('D [de] MMMM [de] YYYY, h:mm A');
+                            }
+                        } catch (\Exception $e) {}
+                    @endphp
+                    <p class="text-secondary mb-1" style="font-size: 0.95rem; margin: 0.2rem 0 0.1rem 0;"><i class="bi bi-geo-alt me-1"></i>{{ $alerta_prioritaria->zona }} · <i class="bi bi-clock me-1"></i>{{ $alertaPrioritariaFecha }}</p>
+                    <p class="mb-0 text-muted" style="font-size: 1.05rem; margin: 0;"><strong class="text-dark">Motivo:</strong> {{ $alerta_prioritaria->motivo }}</p>
+                </div>
+                <div class="flex-col-right">
+                    <a href="/alertas" class="btn btn-sm rounded-pill px-4 py-2 fw-bold text-white shadow-sm" style="background-color: {{ $alerta_prioritaria->tipo === 'red' ? '#ff5a5f' : ($alerta_prioritaria->tipo === 'blue' ? '#299bc4' : '#ffc107') }}; color: {{ $alerta_prioritaria->tipo === 'yellow' ? 'black' : 'white' }}; border: none; text-decoration: none;">Ver detalles &rarr;</a>
+                </div>
+            </div>
+        </div>
+    @endif
 
-            <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
-                    <svg viewBox="0 0 651 192" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-16 w-auto text-gray-700 sm:h-20">
-                        <g clip-path="url(#clip0)" fill="#EF3B2D">
-                            <path d="M248.032 44.676h-16.466v100.23h47.394v-14.748h-30.928V44.676zM337.091 87.202c-2.101-3.341-5.083-5.965-8.949-7.875-3.865-1.909-7.756-2.864-11.669-2.864-5.062 0-9.69.931-13.89 2.792-4.201 1.861-7.804 4.417-10.811 7.661-3.007 3.246-5.347 6.993-7.016 11.239-1.672 4.249-2.506 8.713-2.506 13.389 0 4.774.834 9.26 2.506 13.459 1.669 4.202 4.009 7.925 7.016 11.169 3.007 3.246 6.609 5.799 10.811 7.66 4.199 1.861 8.828 2.792 13.89 2.792 3.913 0 7.804-.955 11.669-2.863 3.866-1.908 6.849-4.533 8.949-7.875v9.021h15.607V78.182h-15.607v9.02zm-1.431 32.503c-.955 2.578-2.291 4.821-4.009 6.73-1.719 1.91-3.795 3.437-6.229 4.582-2.435 1.146-5.133 1.718-8.091 1.718-2.96 0-5.633-.572-8.019-1.718-2.387-1.146-4.438-2.672-6.156-4.582-1.719-1.909-3.032-4.152-3.938-6.73-.909-2.577-1.36-5.298-1.36-8.161 0-2.864.451-5.585 1.36-8.162.905-2.577 2.219-4.819 3.938-6.729 1.718-1.908 3.77-3.437 6.156-4.582 2.386-1.146 5.059-1.718 8.019-1.718 2.958 0 5.656.572 8.091 1.718 2.434 1.146 4.51 2.674 6.229 4.582 1.718 1.91 3.054 4.152 4.009 6.729.953 2.577 1.432 5.298 1.432 8.162-.001 2.863-.479 5.584-1.432 8.161zM463.954 87.202c-2.101-3.341-5.083-5.965-8.949-7.875-3.865-1.909-7.756-2.864-11.669-2.864-5.062 0-9.69.931-13.89 2.792-4.201 1.861-7.804 4.417-10.811 7.661-3.007 3.246-5.347 6.993-7.016 11.239-1.672 4.249-2.506 8.713-2.506 13.389 0 4.774.834 9.26 2.506 13.459 1.669 4.202 4.009 7.925 7.016 11.169 3.007 3.246 6.609 5.799 10.811 7.66 4.199 1.861 8.828 2.792 13.89 2.792 3.913 0 7.804-.955 11.669-2.863 3.866-1.908 6.849-4.533 8.949-7.875v9.021h15.607V78.182h-15.607v9.02zm-1.432 32.503c-.955 2.578-2.291 4.821-4.009 6.73-1.719 1.91-3.795 3.437-6.229 4.582-2.435 1.146-5.133 1.718-8.091 1.718-2.96 0-5.633-.572-8.019-1.718-2.387-1.146-4.438-2.672-6.156-4.582-1.719-1.909-3.032-4.152-3.938-6.73-.909-2.577-1.36-5.298-1.36-8.161 0-2.864.451-5.585 1.36-8.162.905-2.577 2.219-4.819 3.938-6.729 1.718-1.908 3.77-3.437 6.156-4.582 2.386-1.146 5.059-1.718 8.019-1.718 2.958 0 5.656.572 8.091 1.718 2.434 1.146 4.51 2.674 6.229 4.582 1.718 1.91 3.054 4.152 4.009 6.729.953 2.577 1.432 5.298 1.432 8.162 0 2.863-.479 5.584-1.432 8.161zM650.772 44.676h-15.606v100.23h15.606V44.676zM365.013 144.906h15.607V93.538h26.776V78.182h-42.383v66.724zM542.133 78.182l-19.616 51.096-19.616-51.096h-15.808l25.617 66.724h19.614l25.617-66.724h-15.808zM591.98 76.466c-19.112 0-34.239 15.706-34.239 35.079 0 21.416 14.641 35.079 36.239 35.079 12.088 0 19.806-4.622 29.234-14.688l-10.544-8.158c-.006.008-7.958 10.449-19.832 10.449-13.802 0-19.612-11.127-19.612-16.884h51.777c2.72-22.043-11.772-40.877-33.023-40.877zm-18.713 29.28c.12-1.284 1.917-16.884 18.589-16.884 16.671 0 18.697 15.598 18.813 16.884h-37.402zM184.068 43.892c-.024-.088-.073-.165-.104-.25-.058-.157-.108-.316-.191-.46-.056-.097-.137-.176-.203-.265-.087-.117-.161-.242-.265-.345-.085-.086-.194-.148-.29-.223-.109-.085-.206-.182-.327-.252l-.002-.001-.002-.002-35.648-20.524a2.971 2.971 0 00-2.964 0l-35.647 20.522-.002.002-.002.001c-.121.07-.219.167-.327.252-.096.075-.205.138-.29.223-.103.103-.178.228-.265.345-.066.089-.147.169-.203.265-.083.144-.133.304-.191.46-.031.085-.08.162-.104.25-.067.249-.103.51-.103.776v38.979l-29.706 17.103V24.493a3 3 0 00-.103-.776c-.024-.088-.073-.165-.104-.25-.058-.157-.108-.316-.191-.46-.056-.097-.137-.176-.203-.265-.087-.117-.161-.242-.265-.345-.085-.086-.194-.148-.29-.223-.109-.085-.206-.182-.327-.252l-.002-.001-.002-.002L40.098 1.396a2.971 2.971 0 00-2.964 0L1.487 21.919l-.002.002-.002.001c-.121.07-.219.167-.327.252-.096.075-.205.138-.29.223-.103.103-.178.228-.265.345-.066.089-.147.169-.203.265-.083.144-.133.304-.191.46-.031.085-.08.162-.104.25-.067.249-.103.51-.103.776v122.09c0 1.063.568 2.044 1.489 2.575l71.293 41.045c.156.089.324.143.49.202.078.028.15.074.23.095a2.98 2.98 0 001.524 0c.069-.018.132-.059.2-.083.176-.061.354-.119.519-.214l71.293-41.045a2.971 2.971 0 001.489-2.575v-38.979l34.158-19.666a2.971 2.971 0 001.489-2.575V44.666a3.075 3.075 0 00-.106-.774zM74.255 143.167l-29.648-16.779 31.136-17.926.001-.001 34.164-19.669 29.674 17.084-21.772 12.428-43.555 24.863zm68.329-76.259v33.841l-12.475-7.182-17.231-9.92V49.806l12.475 7.182 17.231 9.92zm2.97-39.335l29.693 17.095-29.693 17.095-29.693-17.095 29.693-17.095zM54.06 114.089l-12.475 7.182V46.733l17.231-9.92 12.475-7.182v74.537l-17.231 9.921zM38.614 7.398l29.693 17.095-29.693 17.095L8.921 24.493 38.614 7.398zM5.938 29.632l12.475 7.182 17.231 9.92v79.676l.001.005-.001.006c0 .114.032.221.045.333.017.146.021.294.059.434l.002.007c.032.117.094.222.14.334.051.124.088.255.156.371a.036.036 0 00.004.009c.061.105.149.191.222.288.081.105.149.22.244.314l.008.01c.084.083.19.142.284.215.106.083.202.178.32.247l.013.005.011.008 34.139 19.321v34.175L5.939 144.867V29.632h-.001zm136.646 115.235l-65.352 37.625V148.31l48.399-27.628 16.953-9.677v33.862zm35.646-61.22l-29.706 17.102V66.908l17.231-9.92 12.475-7.182v33.841z"/>
-                        </g>
+    <!-- 2. Water Quality Circular Gauge (Estado general del agua) -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h5 class="fw-bold text-dark text-start mb-3"><i class="bi bi-activity text-primary me-2"></i>Estado general del agua</h5>
+        <div class="d-flex flex-column align-items-center">
+            <div class="premium-gauge-card">
+                <div class="gauge-svg-container">
+                    <svg viewBox="0 0 300 160" class="gauge-svg" width="100%" height="100%">
+                        <defs>
+                            <filter id="indicator-shadow-logged" x="-30%" y="-30%" width="160%" height="160%">
+                                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.4"/>
+                            </filter>
+                        </defs>
+                        <path d="M 40 140 A 110 110 0 0 1 260 140" fill="none" stroke="#e0e0e0" stroke-width="24" stroke-linecap="butt" opacity="0.2"/>
+                        <path d="M 40 140 A 110 110 0 0 1 184.0 35.4" fill="none" stroke="#2cbd1b" stroke-width="24" stroke-linecap="butt"/>
+                        <path d="M 184.0 35.4 A 110 110 0 0 1 239.0 75.3" fill="none" stroke="#f1c40f" stroke-width="24" stroke-linecap="butt"/>
+                        <path d="M 239.0 75.3 A 110 110 0 0 1 260 140" fill="none" stroke="#ff0000" stroke-width="24" stroke-linecap="butt"/>
+                        <circle cx="{{ $indicatorX }}" cy="{{ $indicatorY }}" r="8" fill="#ffffff" stroke="{{ $statusColor }}" stroke-width="3" filter="url(#indicator-shadow-logged)"/>
                     </svg>
-                </div>
-
-                <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
-                    <div class="grid grid-cols-1 md:grid-cols-2">
-                        <div class="p-6">
-                            <div class="flex items-center">
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-500"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                                <div class="ml-4 text-lg leading-7 font-semibold"><a href="https://laravel.com/docs" class="underline text-gray-900 dark:text-white">Documentation</a></div>
-                            </div>
-
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laravel has wonderful, thorough documentation covering every aspect of the framework. Whether you are new to the framework or have previous experience with Laravel, we recommend reading all of the documentation from beginning to end.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-t-0 md:border-l">
-                            <div class="flex items-center">
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-500"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                <div class="ml-4 text-lg leading-7 font-semibold"><a href="https://laracasts.com" class="underline text-gray-900 dark:text-white">Laracasts</a></div>
-                            </div>
-
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript development. Check them out, see for yourself, and massively level up your development skills in the process.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-6 border-t border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center">
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-500"><path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
-                                <div class="ml-4 text-lg leading-7 font-semibold"><a href="https://laravel-news.com/" class="underline text-gray-900 dark:text-white">Laravel News</a></div>
-                            </div>
-
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laravel News is a community driven portal and newsletter aggregating all of the latest and most important news in the Laravel ecosystem, including new package releases and tutorials.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-l">
-                            <div class="flex items-center">
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-500"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">Vibrant Ecosystem</div>
-                            </div>
-
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laravel's robust library of first-party tools and libraries, such as <a href="https://forge.laravel.com" class="underline">Forge</a>, <a href="https://vapor.laravel.com" class="underline">Vapor</a>, <a href="https://nova.laravel.com" class="underline">Nova</a>, and <a href="https://envoyer.io" class="underline">Envoyer</a> help you take your projects to the next level. Pair them with powerful open source libraries like <a href="https://laravel.com/docs/billing" class="underline">Cashier</a>, <a href="https://laravel.com/docs/dusk" class="underline">Dusk</a>, <a href="https://laravel.com/docs/broadcasting" class="underline">Echo</a>, <a href="https://laravel.com/docs/horizon" class="underline">Horizon</a>, <a href="https://laravel.com/docs/sanctum" class="underline">Sanctum</a>, <a href="https://laravel.com/docs/telescope" class="underline">Telescope</a>, and more.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
-                    <div class="text-center text-sm text-gray-500 sm:text-left">
-                        <div class="flex items-center">
-                            <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor" class="-mt-px w-5 h-5 text-gray-400">
-                                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg>
-
-                            <a href="https://laravel.bigcartel.com" class="ml-1 underline">
-                                Shop
-                            </a>
-
-                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="ml-4 -mt-px w-5 h-5 text-gray-400">
-                                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                            </svg>
-
-                            <a href="https://github.com/sponsors/taylorotwell" class="ml-1 underline">
-                                Sponsor
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
-                        Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
+                    <div class="gauge-center-content">
+                        <i class="bi {{ $statusIcon }}" style="color: {{ $statusColor }}; font-size: 3rem;"></i>
+                        <div class="gauge-center-label">ESTADO GENERAL:</div>
+                        <div class="gauge-center-status" style="color: {{ $statusColor }};">{{ $statusText }}</div>
                     </div>
                 </div>
             </div>
         </div>
-    </body>
-</html>
+    </div>
+
+    <!-- 3. Dynamic Sensor Info cards (3 cards grid) -->
+    <div class="row g-4 mb-4">
+        <!-- Card 1: pH -->
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-3.5">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center" style="background-color: #eef7fc; color: #299bc4; width: 48px; height: 48px;">
+                        <i class="bi bi-droplet fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted extra-small fw-semibold">pH del agua</div>
+                        <div class="fs-3 fw-bold text-dark mb-1">{{ number_format($ph, 1) }}</div>
+                        <span class="badge extra-small px-2.5 py-1" style="background-color: {{ $statusColor }}20; color: {{ $statusColor }}; border: 1px solid {{ $statusColor }}50;">{{ $optimoText }}</span>
+                        <div class="text-muted extra-extra-small mt-2">Rango ideal: 6.5 - 8.5</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Tank Level -->
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-3.5">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center" style="background-color: #f0fdf4; color: #198754; width: 48px; height: 48px;">
+                        <i class="bi bi-database fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="text-muted extra-small fw-semibold">Nivel del tanque</div>
+                        <div class="fs-3 fw-bold text-dark mb-1">{{ $sensor->water_level }}%</div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ $sensor->water_level }}%;" aria-valuenow="{{ $sensor->water_level }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="text-muted extra-extra-small mt-2">Capacidad del tanque</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Last Measurement -->
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-3.5">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center" style="background-color: #fffbeb; color: #d97706; width: 48px; height: 48px;">
+                        <i class="bi bi-clock fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted extra-small fw-semibold">Última medición</div>
+                        <div class="fs-5 fw-bold text-dark mb-1" style="line-height: 1.2;">{{ str_replace('hace ', 'Hace ', $time_ago) }}</div>
+                        <div class="text-muted extra-extra-small mb-2">{{ $sensor->updated_at ? \Carbon\Carbon::parse($sensor->updated_at)->isoFormat('D [de] MMMM [de] YYYY, h:mm A') : '' }}</div>
+                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle extra-small px-2 py-1 d-inline-flex align-items-center gap-1.5">
+                            <span class="dot-flashing"></span> En tiempo real
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Water Bill Delivery Section (Mi último recibo) -->
+    @if(isset($ultimo_recibo))
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-receipt text-warning me-2"></i>Mi Último Recibo de Agua</h5>
+                <span class="badge rounded-pill px-3 py-1.5 {{ $ultimo_recibo->estado_pago === 'Pagado' ? 'bg-success-subtle text-success border border-success' : 'bg-warning-subtle text-warning border border-warning' }}">
+                    {{ $ultimo_recibo->estado_pago ?? 'Pendiente' }}
+                </span>
+            </div>
+            
+            <div class="row align-items-center g-3">
+                <div class="col-md-7">
+                    <p class="text-muted small mb-2">Se ha emitido tu recibo de consumo de agua potable correspondiente al periodo **{{ $ultimo_recibo->mes_facturado }}**.</p>
+                    <div class="row g-2 text-dark extra-small">
+                        <div class="col-6"><strong>Medición Anterior:</strong> {{ (float)$ultimo_recibo->lectura_anterior }} m³</div>
+                        <div class="col-6"><strong>Medición Actual:</strong> {{ (float)$ultimo_recibo->lectura_actual }} m³</div>
+                        <div class="col-6"><strong>Consumo Neto:</strong> {{ (float)$ultimo_recibo->consumo }} m³</div>
+                        <div class="col-6"><strong>Total Facturado:</strong> <span class="fw-bold text-primary">${{ number_format($ultimo_recibo->total_pagar, 2) }}</span></div>
+                    </div>
+                </div>
+                <div class="col-md-5 text-md-end d-flex gap-2 justify-content-md-end">
+                    @if($ultimo_recibo->estado_pago !== 'Pagado')
+                        <button class="btn btn-success rounded-pill px-4 fw-bold shadow-sm d-inline-flex align-items-center gap-2 btn-pagar" data-id="{{ $ultimo_recibo->id_pago }}">
+                            <i class="bi bi-credit-card"></i> Pagar Recibo
+                        </button>
+                    @endif
+                    <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm d-inline-flex align-items-center gap-2" onclick='imprimirTicket({{ json_encode($ultimo_recibo) }})'>
+                        <i class="bi bi-printer"></i> Imprimir Recibo
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- 4b. History of Receipts Section -->
+    @if(isset($historial_recibos) && $historial_recibos->count() > 0)
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history text-primary me-2"></i>Mi Historial de Recibos</h5>
+                
+                <!-- Search & Filters Container -->
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <!-- Search Input -->
+                    <div class="input-group input-group-sm" style="max-width: 220px;">
+                        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                        <input type="text" id="buscarRecibo" class="form-control border-start-0 ps-0" placeholder="Buscar periodo...">
+                    </div>
+                    
+                    <!-- Filter Select -->
+                    <select id="filtrarEstado" class="form-select form-select-sm" style="max-width: 160px; font-weight: 600;">
+                        <option value="todos">Todos los estados</option>
+                        <option value="Pagado">Pagados</option>
+                        <option value="Pendiente">Pendientes</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="text-muted small">
+                            <th class="border-0">Periodo</th>
+                            <th class="border-0">Lectura Ant.</th>
+                            <th class="border-0">Lectura Act.</th>
+                            <th class="border-0">Consumo</th>
+                            <th class="border-0">Total</th>
+                            <th class="border-0">Estado</th>
+                            <th class="border-0 text-end">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($historial_recibos as $recibo)
+                            <tr class="small text-dark fila-recibo" data-periodo="{{ strtolower($recibo->mes_facturado) }}" data-estado="{{ $recibo->estado_pago ?? 'Pendiente' }}">
+                                <td class="border-light fw-bold">{{ $recibo->mes_facturado }}</td>
+                                <td class="border-light text-muted">{{ (float)$recibo->lectura_anterior }} m³</td>
+                                <td class="border-light text-muted">{{ (float)$recibo->lectura_actual }} m³</td>
+                                <td class="border-light fw-semibold">{{ (float)$recibo->consumo }} m³</td>
+                                <td class="border-light fw-bold text-primary">${{ number_format($recibo->total_pagar, 2) }}</td>
+                                <td class="border-light">
+                                    <span class="badge rounded-pill px-2.5 py-1.5 {{ $recibo->estado_pago === 'Pagado' ? 'bg-success-subtle text-success border border-success' : 'bg-warning-subtle text-warning border border-warning' }}">
+                                        {{ $recibo->estado_pago ?? 'Pendiente' }}
+                                    </span>
+                                </td>
+                                <td class="border-light text-end">
+                                    <div class="d-flex justify-content-end gap-1.5">
+                                        @if($recibo->estado_pago !== 'Pagado')
+                                            <button class="btn btn-sm btn-success rounded-pill px-3 fw-bold d-inline-flex align-items-center gap-1.5 btn-pagar" data-id="{{ $recibo->id_pago }}">
+                                                <i class="bi bi-credit-card"></i> Pagar
+                                            </button>
+                                        @endif
+                                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold d-inline-flex align-items-center gap-1.5" onclick='imprimirTicket({{ json_encode($recibo) }})'>
+                                            <i class="bi bi-printer"></i> Imprimir
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                        <!-- Row to show when no matches found -->
+                        <tr id="sinResultados" style="display: none;">
+                            <td colspan="7" class="text-center py-4 text-muted">
+                                <i class="bi bi-info-circle fs-4 d-block mb-2"></i>
+                                No se encontraron recibos con los filtros seleccionados.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+
+    <!-- 5. Quick Actions (Acciones rápidas) -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h5 class="fw-bold text-dark mb-3">Acciones rápidas</h5>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <a href="/calidad" class="btn btn-outline-primary w-100 rounded-3 py-3 fw-bold d-flex justify-content-between align-items-center px-3.5" style="text-decoration: none;">
+                    <span>Consultar calidad completa</span>
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="/reportar" class="btn btn-outline-success w-100 rounded-3 py-3 fw-bold d-flex justify-content-between align-items-center px-3.5" style="text-decoration: none;">
+                    <span>Reportar problema / falla</span>
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </div>
+            <div class="col-md-4">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Banner de Cumplimiento -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4" style="background-color: #f0fdf4; border: 1px solid #d1fae5;">
+        <div class="card-body p-3.5 d-flex align-items-center gap-3">
+            <div class="rounded-circle bg-success bg-opacity-10 p-2 text-success d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                <i class="bi bi-shield-fill-check fs-4"></i>
+            </div>
+            <div class="text-success small fw-semibold flex-grow-1">
+                Tu agua cumple con los estándares de calidad del MINSAL y la OMS. Seguimos monitoreando para garantizar tu bienestar.
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Recent Notifications feed -->
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0">Notificaciones recientes</h5>
+            <a href="/alertas" class="text-decoration-none small fw-semibold text-primary">Ver todas</a>
+        </div>
+        <div class="list-group list-group-flush">
+            @foreach($alertas_recientes as $al)
+                @php
+                    $circleColorClass = 'bg-warning bg-opacity-10 text-warning';
+                    $bellIconClass = 'bi-bell';
+                    if ($al->tipo === 'red') {
+                        $circleColorClass = 'bg-danger bg-opacity-10 text-danger';
+                        $bellIconClass = 'bi-bell-fill';
+                    } elseif ($al->tipo === 'blue') {
+                        $circleColorClass = 'bg-primary bg-opacity-10 text-primary';
+                        $bellIconClass = 'bi-info-circle';
+                    }
+                @endphp
+                <a href="/alertas" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between py-3 border-bottom border-light px-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center {{ $circleColorClass }}" style="width: 38px; height: 38px;">
+                            <i class="bi {{ $bellIconClass }}"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0.5 fw-bold text-dark small">{{ $al->titulo }}</h6>
+                            @php
+                                $alFechaDisplay = $al->fecha_texto;
+                                try {
+                                    if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $al->fecha_texto)) {
+                                        $alFechaDisplay = \Carbon\Carbon::parse($al->fecha_texto)->isoFormat('D [de] MMMM [de] YYYY, h:mm A');
+                                    }
+                                } catch (\Exception $e) {}
+                            @endphp
+                            <p class="mb-0 text-muted extra-small">{{ $al->zona }} · {{ $alFechaDisplay }}</p>
+                        </div>
+                    </div>
+                    <small class="text-muted extra-extra-small">{{ $al->created_at ? $al->created_at->diffForHumans() : 'Recientemente' }}</small>
+                </a>
+            @endforeach
+            <!-- Sensor Simulation notification template -->
+            <div class="list-group-item d-flex align-items-center justify-content-between py-3 border-0 px-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                        <i class="bi bi-droplet"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0.5 fw-bold text-dark small">Nueva medición registrada</h6>
+                        <p class="mb-0 text-muted extra-small">pH: {{ number_format($ph, 1) }} - Estado: {{ $optimoText }}</p>
+                    </div>
+                </div>
+                <small class="text-muted extra-extra-small">{{ str_replace('hace ', 'Hace ', $time_ago) }}</small>
+            </div>
+        </div>
+    </div>
+
+@else
+    <!-- ========================================== -->
+    <!-- GUEST WELCOME LANDING VIEW                 -->
+    <!-- ========================================== -->
+    
+            <section class="hero-section row align-items-center">
+                <div class="col-md-6 d-flex flex-column align-items-center text-center px-4">
+                    <h1 class="hero-title">Tu tranquilidad,<br>nuestra prioridad</h1>
+                    <p class="hero-subtitle">
+                        Hidrovida te permite monitorear la calidad del<br>agua en tiempo real.<br>
+                        Recibe alertas instantaneas de cortes y reporta<br>
+                        incidencias facilmente para asegurar el<br>
+                        bienestar de tu familia
+                    </p>
+                    <a href="/calidad" class="btn-primary-custom mt-2">
+                        Consultar calidad del agua &rarr;
+                    </a>
+                </div>
+                <div class="col-md-6 text-center">
+                    <img src="{{ asset('img/tank_design.jpeg') }}" alt="Water Tower" class="img-fluid" style="max-height: 400px; width: auto; object-fit: contain;">
+                </div>
+            </section>
+
+            @if(isset($alerta_prioritaria) && $alerta_prioritaria->tipo === 'red')
+            @php
+                $guestAlertaFecha = $alerta_prioritaria->fecha_texto;
+                try {
+                    if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $alerta_prioritaria->fecha_texto)) {
+                        $guestAlertaFecha = \Carbon\Carbon::parse($alerta_prioritaria->fecha_texto)->isoFormat('D [de] MMMM [de] YYYY, h:mm A');
+                    }
+                } catch (\Exception $e) {}
+            @endphp
+            <div class="card border-0 shadow-sm rounded-4 mb-4" style="background-color: #fff5f5; border-left: 5px solid #ff5a5f !important; text-align: left;">
+                <div class="card-body p-4 alert-premium-flex gap-3">
+                    <div class="flex-col-left">
+                        <div class="rounded-circle p-2.5 d-flex align-items-center justify-content-center" style="background-color: #ffe3e3; width: 58px; height: 58px; flex-shrink: 0;">
+                            <i class="bi bi-exclamation-triangle-fill text-danger fs-2"></i>
+                        </div>
+                    </div>
+                    <div class="flex-col-center">
+                        <h5 class="mb-1 fw-bold text-danger" style="font-size: 1.35rem; margin: 0;">Alerta activa</h5>
+                        <p class="mb-1 text-dark fw-bold" style="font-size: 1.25rem; line-height: 1.3; margin: 0.2rem 0 0.1rem 0;">{{ $alerta_prioritaria->titulo }}</p>
+                        <p class="mb-0 text-muted" style="font-size: 0.95rem; margin: 0;"><i class="bi bi-clock me-1"></i>{{ $guestAlertaFecha }}</p>
+                    </div>
+                    <div class="flex-col-right">
+                        <a href="/alertas" class="btn btn-sm rounded-pill px-4 py-2 fw-bold text-white shadow-sm" style="background-color: #ff5a5f; border: none; transition: background-color 0.3s; text-decoration: none;" onmouseover="this.style.backgroundColor='#e0484d'" onmouseout="this.style.backgroundColor='#ff5a5f'">Ver todas las alertas &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            <div class="panel-container">
+                <h2 class="panel-title">Panel de resumen de estado</h2>
+                <div class="gauge-section-new">
+                    <div class="premium-gauge-card">
+                        <h3 class="gauge-card-title">¿Cómo está tu agua hoy?</h3>
+                        <div class="gauge-svg-container">
+                            <svg viewBox="0 0 300 160" class="gauge-svg" width="100%" height="100%">
+                                <defs>
+                                    <filter id="indicator-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                                        <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.4"/>
+                                    </filter>
+                                </defs>
+                                <path d="M 40 140 A 110 110 0 0 1 260 140" fill="none" stroke="#e0e0e0" stroke-width="24" stroke-linecap="butt" opacity="0.2"/>
+                                <path d="M 40 140 A 110 110 0 0 1 184.0 35.4" fill="none" stroke="#2cbd1b" stroke-width="24" stroke-linecap="butt"/>
+                                <path d="M 184.0 35.4 A 110 110 0 0 1 239.0 75.3" fill="none" stroke="#f1c40f" stroke-width="24" stroke-linecap="butt"/>
+                                <path d="M 239.0 75.3 A 110 110 0 0 1 260 140" fill="none" stroke="#ff0000" stroke-width="24" stroke-linecap="butt"/>
+                                <circle cx="{{ $indicatorX }}" cy="{{ $indicatorY }}" r="8" fill="#ffffff" stroke="{{ $statusColor }}" stroke-width="3" filter="url(#indicator-shadow)"/>
+                            </svg>
+                            <div class="gauge-center-content">
+                                <i class="bi {{ $statusIcon }}" style="color: {{ $statusColor }}; font-size: 3rem;"></i>
+                                <div class="gauge-center-label">ESTADO GENERAL:</div>
+                                <div class="gauge-center-status" style="color: {{ $statusColor }};">{{ $statusText }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-items">
+                        <div class="status-item">
+                            <i class="bi bi-person-badge status-icon"></i>
+                            <div>
+                                <h4>Tu agua hoy:</h4>
+                                <div class="highlight-text">PH {{ number_format($ph, 1) }} | <span style="color: {{ $statusColor }};">{{ $optimoText }}</span></div>
+                                <p>{{ $optimoSubText }}</p>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <i class="bi bi-clock status-icon"></i>
+                            <div>
+                                <h4>Ultima medición</h4>
+                                <div class="highlight-text" style="font-size: 1.1rem; color: #1b3650;">{{ str_replace('hace ', 'Hace ', $time_ago) }}</div>
+                                <p>Actualización en tiempo real</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-banner">
+                <div class="action-banner-left">
+                    <i class="bi bi-megaphone"></i>
+                    <div>
+                        <h3>¿Ves algun problema?</h3>
+                        <p>Reporta incidencias y ayuda a tu comunidad</p>
+                    </div>
+                </div>
+                <a href="/reportar" class="btn-teal">Reportar incidencia &rarr;</a>
+            </div>
+
+            <div class="tips-section mb-5">
+                <h3 style="color: #1a5c8b; font-weight: 800; margin-bottom: 2rem;">Consejos para el cuidado del agua</h3>
+                <div class="d-flex align-items-center justify-content-between gap-3">
+                    <div class="row w-100 mx-0">
+                        <div class="col-md-4 px-2">
+                            <img src="{{ asset('img/ducha.jpg') }}" class="img-fluid w-100" style="border-radius: 4px;" alt="Ducha">
+                        </div>
+                        <div class="col-md-4 px-2">
+                            <img src="{{ asset('img/fugas.jpg') }}" class="img-fluid w-100" style="border-radius: 4px;" alt="Fuga">
+                        </div>
+                        <div class="col-md-4 px-2">
+                            <img src="{{ asset('img/lavadora.jpg') }}" class="img-fluid w-100" style="border-radius: 4px;" alt="Lavadora">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="compliance-banner">
+                <div class="compliance-banner-left">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Cumplimos con las normativas de calidad establecidas por las Autoridades</span>
+                </div>
+                <a href="/estandares" class="compliance-link">Ver normativas de OMS y MINSAL &rarr;</a>
+            </div>
+@endif
+
+@endsection
+
+@section('scripts')
+<script>
+// Receipt Printing Script
+function imprimirTicket(pago) {
+    const windowUrl = 'about:blank';
+    const uniqueName = new Date().getTime();
+    const windowName = 'Print' + uniqueName;
+    const PrintWindow = window.open(windowUrl, windowName, 'left=500,top=100,width=400,height=600');
+    const fechaStr = new Date(pago.fecha_pago || pago.created_at).toLocaleString('es-ES', {
+        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true
+    });
+    const totalStr = parseFloat(pago.total_pagar).toFixed(2);
+    const consumoStr = parseFloat(pago.consumo).toFixed(2);
+    const anteriorStr = parseFloat(pago.lectura_anterior).toFixed(2);
+    const actualStr = parseFloat(pago.lectura_actual).toFixed(2);
+    const costoConsumoStr = (parseFloat(pago.consumo) * 1.50).toFixed(2);
+    
+    PrintWindow.document.write(`
+      <html>
+        <head>
+          <title>Imprimir Recibo - HidroVida</title>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
+          <style>
+            body { font-family: monospace; padding: 20px; color: #000; }
+            .border-dashed { border-top: 2px dashed #000; }
+            .extra-small { font-size: 0.8rem; }
+            .extra-extra-small { font-size: 0.7rem; }
+            @media print {
+              body { padding: 0; }
+              .no-print { display: none; }
+            }
+          </style>
+        </head>
+        <body onload="window.print();window.close()">
+          <div style="max-width: 300px; margin: 0 auto; text-align: center;">
+            <h5 class="fw-extrabold text-uppercase text-primary mb-1">HIDROVIDA.</h5>
+            <p class="text-muted extra-small mb-0">Sistema de Control de Agua Potable</p>
+            <p class="text-muted extra-small">El Salvador</p>
+            <div class="border-top border-dashed my-2"></div>
+            <h6 class="fw-bold text-dark mb-0">RECIBO DE CONSUMO MENSUAL</h6>
+            <small class="text-muted">Factura No: HVR-${pago.id_pago}</small>
+            
+            <div class="extra-small text-start text-dark mt-3">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">No. Cuenta / ID:</span>
+                <span class="fw-bold">#${pago.id_usuario}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">Periodo Facturado:</span>
+                <span class="fw-bold">${pago.mes_facturado}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">Fecha de Emisión:</span>
+                <span class="fw-bold">${fechaStr}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Estado:</span>
+                <span class="badge ${pago.estado_pago === 'Pagado' ? 'bg-success text-white' : 'bg-warning text-dark'}">
+                  ${pago.estado_pago || 'Pendiente'}
+                </span>
+              </div>
+            </div>
+            
+            <div class="border-top border-dashed my-3"></div>
+            
+            <h6 class="fw-bold text-dark text-start mb-2 extra-small">Lecturas Registradas</h6>
+            <div class="extra-small text-muted d-flex justify-content-between mb-1">
+              <span>Lectura Anterior:</span>
+              <span class="text-dark">${anteriorStr} m³</span>
+            </div>
+            <div class="extra-small text-muted d-flex justify-content-between mb-1">
+              <span>Lectura Actual:</span>
+              <span class="text-dark">${actualStr} m³</span>
+            </div>
+            <div class="extra-small text-muted d-flex justify-content-between mb-2">
+              <span>Consumo del Mes:</span>
+              <span class="fw-bold text-dark">${consumoStr} m³</span>
+            </div>
+            
+            <div class="border-top border-dashed my-3"></div>
+            
+            <h6 class="fw-bold text-dark text-start mb-2 extra-small">Detalle de Cobro</h6>
+            <div class="extra-small text-muted d-flex justify-content-between mb-1">
+              <span>Cuota Fija Base:</span>
+              <span class="text-dark">$4.50</span>
+            </div>
+            <div class="extra-small text-muted d-flex justify-content-between mb-2">
+              <span>Consumo (${consumoStr} m³ x $1.50):</span>
+              <span class="text-dark">$${costoConsumoStr}</span>
+            </div>
+            
+            <div class="border-top border-dashed my-2"></div>
+            
+            <div class="d-flex justify-content-between fw-bold text-dark fs-5 py-1">
+              <span>Total a Pagar:</span>
+              <span class="text-primary">$${totalStr}</span>
+            </div>
+
+            <div class="border-top border-dashed my-2"></div>
+            
+            ${pago.estado_pago !== 'Pagado' ? `
+            <div class="alert alert-warning py-1.5 px-3 mt-2 text-center border-0 rounded-3" style="font-size: 0.72rem; background-color: #fff3cd; color: #664d03; margin-bottom: 0;">
+              <strong>Pendiente de Pago:</strong> El usuario debe pagar este recibo.
+            </div>
+            ` : `
+            <div class="alert alert-success py-1.5 px-3 mt-2 text-center border-0 rounded-3" style="font-size: 0.72rem; background-color: #d1e7dd; color: #0f5132; margin-bottom: 0;">
+              <strong>Recibo Pagado:</strong> ¡Gracias por estar al día!
+            </div>
+            `}
+            
+            <div class="border-top border-dashed my-3"></div>
+            
+            <div class="text-center mt-3 text-muted extra-extra-small">
+              <p class="mb-1">¡Gracias por hacer un uso responsable del agua!</p>
+              <p class="mb-0">Para soporte o dudas contáctanos en soporte@hidrovida.com</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `);
+    PrintWindow.document.close();
+    PrintWindow.focus();
+}
+
+// Client-side search and filter for receipts history
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('buscarRecibo');
+    const filterSelect = document.getElementById('filtrarEstado');
+    
+    if (searchInput && filterSelect) {
+        function filtrarRecibos() {
+            const textoBusqueda = searchInput.value.toLowerCase().trim();
+            const estadoSeleccionado = filterSelect.value;
+            let contadorVisibles = 0;
+            
+            const filas = document.querySelectorAll('.fila-recibo');
+            filas.forEach(function(row) {
+                const periodo = row.getAttribute('data-periodo');
+                const estado = row.getAttribute('data-estado');
+                
+                const coincideTexto = periodo.includes(textoBusqueda);
+                const coincideEstado = (estadoSeleccionado === 'todos' || estado === estadoSeleccionado);
+                
+                if (coincideTexto && coincideEstado) {
+                    row.style.display = '';
+                    contadorVisibles++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            const sinResultados = document.getElementById('sinResultados');
+            if (sinResultados) {
+                if (contadorVisibles === 0) {
+                    sinResultados.style.display = '';
+                } else {
+                    sinResultados.style.display = 'none';
+                }
+            }
+        }
+        
+        searchInput.addEventListener('input', filtrarRecibos);
+        filterSelect.addEventListener('change', filtrarRecibos);
+    }
+});
+
+// Client-side Payment Request Handler (Vanilla JS)
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(event) {
+        const btn = event.target.closest('.btn-pagar');
+        if (btn) {
+            event.preventDefault();
+            const idPago = btn.getAttribute('data-id');
+            const tokenElement = document.querySelector('meta[name="csrf-token"]');
+            const token = tokenElement ? tokenElement.getAttribute('content') : '';
+
+            alertify.confirm('Confirmación de Pago', '¿Deseas realizar el pago de este recibo?', 
+                function() {
+                    fetch('/api/pagos/pagar', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id_pago: idPago
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en el servidor');
+                        }
+                        return response.json();
+                    })
+                    .then(response => {
+                        if (response.success) {
+                            alertify.success(response.message);
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 1200);
+                        } else {
+                            alertify.error(response.message);
+                        }
+                    })
+                    .catch(error => {
+                        alertify.error('Error al procesar el pago.');
+                    });
+                }, 
+                function() {}
+            ).set('labels', {ok: 'Aceptar', cancel: 'Cancelar'});
+        }
+    });
+});
+</script>
+@endsection
